@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Web: e-commerce
+## Tech: 
+- Front-end: Next.js (App Router), React, TypeScript, Tailwind CSS, Shadcn UI, React Hook Form.
+- Back-end: Next.js API Routes (Route Handlers), NextAuth.js, Zod (Validation).
+- Database & Cloud: Firebase (Firestore, Authentication), Google Cloud Platform.
+- Tools & Others: Git/GitHub, VS Code, Postman.
 
-## Getting Started
+## Features:
+### Admin panel ("/admin")
+- Managers management (admins)
+- Categories management
+- Products management
+- Couponts management
+- Users management
+- Orders management
+### Customer ("/")
+- Homepage (All products pagination, categories list)
+- Category detail
+- Product Detail
+- Cart
+- Payment
+- Order status
 
-First, run the development server:
+## DB design
+### Admins (managers)
+- email: string
+- password: string
+- isActive: boolean
+- deleted_at: string
+- created_at: string
+- updated_at: string
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Categories
+- name: string
+- slug: string
+- description: string // html
+- deleted_at: string
+- created_at: string
+- updated_at: string
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Products
+- name: string
+- slug: string
+- description: string // html
+- created_by: AdminRef
+- images: string[] // url to storage firebase
+- categories: Array<'CategoriesRef'>
+    ### Categories
+    - id: string
+    - name: string
+    - slug: string
+    - description: string // html
+- properties
+    ### Properties
+    - name: string
+    - color: string
+    - size: string
+    - price: number
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Coupons
+- name: string
+- code: string
+- expried_at: string
+- percent: number (%)
+- stripe_id: string
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Users
+- email: string
+- google_id: string // or token
+- facebook_id:string // or token
+- first_name: string
+- last_name: string
+- avt: string // url to storage firebase
 
-## Learn More
+### Cart
+- user: UserRef
+- products: Array<'ProductRef'>
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Orders
+- user: UserRef
+- products: Array<'ProductRef'>
+- coupon: CounponRef
+- total: number
+- stripe_invoice_id: string
+- status: string
