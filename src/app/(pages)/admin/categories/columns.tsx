@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { ColumnDef } from "@tanstack/react-table"
+import { PenLine, Trash2 } from "lucide-react"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -43,9 +44,9 @@ export const columns: ColumnDef<CategoryType>[] = [
                         onClick={() => {
                             console.log("Edit", category.id)
                         }}
-                        className="bg-yellow-100 text-yellow-700 hover:bg-yellow-200 hover:text-yellow-700 transition-colors"
+                        className="bg-yellow-100 text-yellow-700 hover:bg-yellow-200 hover:text-yellow-700 transition-colors cursor-pointer"
                     >
-                        Edit
+                        Edit <PenLine />
                     </Button>
 
                     <Button
@@ -53,8 +54,9 @@ export const columns: ColumnDef<CategoryType>[] = [
                         onClick={() => {
                             console.log("Delete", category.id)
                         }}
+                        className="cursor-pointer"
                     >
-                        Delete
+                        Delete <Trash2 />
                     </Button>
                 </div>
             )
