@@ -21,10 +21,10 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { EllipsisVerticalIcon, CircleUserRoundIcon, CreditCardIcon, BellIcon, LogOutIcon } from "lucide-react"
-import { signOut } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
 
 export function NavUser({
-  user,
+  user: propsUser,
 }: {
   user: {
     name: string
@@ -33,6 +33,25 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const { data: session } = useSession()
+
+  // Nếu chưa có session thì hiện loading hoặc null
+  if (!session?.user) return null
+
+  // Lấy dữ liệu từ session hoặc props
+  const rawEmail = session.user.email || propsUser.email;
+  const rawName = session.user.name || propsUser.name;
+
+  // Logic: Nếu không có name, lấy phần trước dấu @ của email làm name
+  // const displayName = rawName || (rawEmail ? rawEmail.split('@')[0] : "Admin");
+  const displayName = (rawEmail ? rawEmail.split('@')[0] : "NewUser");
+
+  const user = {
+    ...propsUser,
+    name: displayName,
+    email: rawEmail,
+    avatar: session.user.image || propsUser.avatar,
+  }
 
   return (
     <SidebarMenu>
