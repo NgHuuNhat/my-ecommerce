@@ -8,8 +8,8 @@ async function getData(): Promise<CategoryType[]> {
             id: "728ed52f",
             name: "test1",
             slug: "test-1",
-            createdAt: "",
-            updatedAt: "",
+            createdAt: "01/01/2001",
+            updatedAt: "02/02/2002",
         },
         // ...
     ]
