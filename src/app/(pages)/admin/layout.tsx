@@ -1,8 +1,30 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { DatabaseIcon } from "lucide-react"
 
 export default function AdminLayout({ children }: any) {
+    const data: any = {
+        documents: [
+            {
+                name: "admin",
+                url: "/admin",
+                icon: (
+                    <DatabaseIcon
+                    />
+                ),
+            },
+            {
+                name: "categories",
+                url: "/admin/categories",
+                icon: (
+                    <DatabaseIcon
+                    />
+                ),
+            },
+        ],
+    }
+
     return (
         <SidebarProvider
             style={
@@ -12,7 +34,7 @@ export default function AdminLayout({ children }: any) {
                 } as React.CSSProperties
             }
         >
-            <AppSidebar variant="inset" />
+            <AppSidebar variant="inset" data={data} />
             <SidebarInset>
                 <SiteHeader />
                 <div className="flex flex-1 flex-col">
