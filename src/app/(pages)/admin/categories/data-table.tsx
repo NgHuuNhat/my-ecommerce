@@ -74,6 +74,7 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
@@ -92,7 +93,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import { GripVerticalIcon, CircleCheckIcon, LoaderIcon, EllipsisVerticalIcon, Columns3Icon, ChevronDownIcon, PlusIcon, ChevronsLeftIcon, ChevronLeftIcon, ChevronRightIcon, ChevronsRightIcon, TrendingUpIcon } from "lucide-react"
+import { GripVerticalIcon, CircleCheckIcon, LoaderIcon, EllipsisVerticalIcon, Columns3Icon, ChevronDownIcon, PlusIcon, ChevronsLeftIcon, ChevronLeftIcon, ChevronRightIcon, ChevronsRightIcon, TrendingUpIcon, ArrowUpIcon, ArrowDownIcon, Trash2, Pen } from "lucide-react"
 
 // export const schema = z.object({
 //   id: z.number(),
@@ -344,6 +345,17 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: "id",
+    header: "ID",
+    cell: ({ row }) => (
+      <div className="">
+        <Badge variant="outline" className="px-1.5 text-muted-foreground">
+          {row.original.id || "id"}
+        </Badge>
+      </div>
+    ),
+  },
+  {
     accessorKey: "name",
     header: "Name",
     cell: ({ row }) => {
@@ -408,7 +420,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
               console.log("Edit", data)
             }}
           >
-            Edit
+            Edit <Pen />
           </Button>
 
           {/* Delete */}
@@ -419,7 +431,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
               console.log("Delete", data)
             }}
           >
-            Delete
+            Delete <Trash2 />
           </Button>
         </div>
       )
@@ -523,10 +535,39 @@ export function DataTable({
       className="w-full flex-col justify-start gap-6"
     >
       <div className="flex items-center justify-between px-4 lg:px-6">
-        <Label htmlFor="view-selector" className="sr-only">
+
+        <div className="flex gap-2">
+          <Select>
+            <SelectTrigger className="w-full max-w-48">
+              <SelectValue placeholder="Select sort" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Sort</SelectLabel>
+                <SelectItem value="none">Select sort</SelectItem>
+                <SelectItem value="id">ID</SelectItem>
+                <SelectItem value="name">Name</SelectItem>
+                <SelectItem value="slug">Slug</SelectItem>
+                <SelectItem value="createdAt">Created At</SelectItem>
+                <SelectItem value="updateAt">Updated At</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+
+          <div className="flex gap-2">
+            <Button variant="outline" size="icon" aria-label="Submit">
+              <ArrowUpIcon />
+            </Button>
+            <Button variant="outline" size="icon" aria-label="Submit">
+              <ArrowDownIcon />
+            </Button>
+          </div>
+        </div>
+
+        {/* <Label htmlFor="view-selector" className="sr-only">
           View
-        </Label>
-        <Select defaultValue="outline">
+        </Label> */}
+        {/* <Select defaultValue="outline">
           <SelectTrigger
             className="flex w-fit @4xl/main:hidden"
             size="sm"
@@ -542,8 +583,8 @@ export function DataTable({
               <SelectItem value="focus-documents">Focus Documents</SelectItem>
             </SelectGroup>
           </SelectContent>
-        </Select>
-        <TabsList className="hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:bg-muted-foreground/30 **:data-[slot=badge]:px-1 @4xl/main:flex">
+        </Select> */}
+        {/* <TabsList className="hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:bg-muted-foreground/30 **:data-[slot=badge]:px-1 @4xl/main:flex">
           <TabsTrigger value="outline">Outline</TabsTrigger>
           <TabsTrigger value="past-performance">
             Past Performance <Badge variant="secondary">3</Badge>
@@ -552,7 +593,7 @@ export function DataTable({
             Key Personnel <Badge variant="secondary">2</Badge>
           </TabsTrigger>
           <TabsTrigger value="focus-documents">Focus Documents</TabsTrigger>
-        </TabsList>
+        </TabsList> */}
         <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
