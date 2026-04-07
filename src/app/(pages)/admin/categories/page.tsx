@@ -1,7 +1,7 @@
 import React from 'react'
-import { DataTable } from './data-table'
+import { DataTable } from './components/table'
 import data from "./data.json"
-import { InputGroup, InputGroupAddon, InputGroupInput } from './input-group'
+import { InputGroup, InputGroupAddon, InputGroupInput } from './components/search'
 import { SearchIcon } from 'lucide-react'
 
 export default function CategoriesPage() {
