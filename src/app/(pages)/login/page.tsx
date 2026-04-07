@@ -1,10 +1,10 @@
 'use client'
 
-import { CreateAdminType } from "@/app/services/types/admin"
-import { LoginForm } from "@/components/login-form"
+import { CreateAdminType } from "@/app/features/admin/type"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
+import { LoginForm } from "./form"
 
 export default function Page() {
   const router = useRouter()

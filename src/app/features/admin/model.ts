@@ -1,7 +1,7 @@
 import { db } from "@/app/services/firebase"
-import { AdminType, CreateAdminType } from "@/app/services/types/admin"
-import { hashPassword } from "@/app/services/utils/password"
 import { addDoc, collection, getDoc, getDocs, query, Timestamp, where } from "firebase/firestore"
+import { AdminType, CreateAdminType } from "./type"
+import { hashPassword } from "../login/password"
 
 const adminRef = collection(db, 'admins')
 

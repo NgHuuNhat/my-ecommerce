@@ -1,6 +1,6 @@
 import { findAdminByEmail, isEmailExists } from "@/app/features/admin/model"
-import { comparePassword } from "@/app/services/utils/password"
-import { formSchema } from "@/app/services/validations/login"
+import { comparePassword } from "@/app/features/login/password"
+import { formSchema } from "@/app/features/login/validation"
 import NextAuth, { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
