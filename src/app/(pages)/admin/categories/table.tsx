@@ -109,6 +109,7 @@ export const schema = z.object({
   id: z.number(),
   name: z.string(),
   slug: z.string(),
+  description: z.string(),
   createdAt: z.string(),
   updatedAt: z.string(),
 })
@@ -375,6 +376,17 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     ),
   },
   {
+    accessorKey: "description",
+    header: "Description",
+    cell: ({ row }) => (
+      <div className="w-32">
+        <Badge variant="outline" className="px-1.5 text-muted-foreground">
+          {row.original.description || "description"}
+        </Badge>
+      </div>
+    ),
+  },
+  {
     accessorKey: "createdAt",
     header: "Created At",
     cell: ({ row }) => (
@@ -548,6 +560,7 @@ export function DataTable({
                 <SelectItem value="id">ID</SelectItem>
                 <SelectItem value="name">Name</SelectItem>
                 <SelectItem value="slug">Slug</SelectItem>
+                <SelectItem value="description">Description</SelectItem>
                 <SelectItem value="createdAt">Created At</SelectItem>
                 <SelectItem value="updateAt">Updated At</SelectItem>
               </SelectGroup>
@@ -893,7 +906,7 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
               <Input id="header" defaultValue={item.name} />
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-3">
+              {/* <div className="flex flex-col gap-3">
                 <Label htmlFor="type">Type</Label>
                 <Select defaultValue={item.slug}>
                   <SelectTrigger id="type" className="w-full">
@@ -920,7 +933,7 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
-              </div>
+              </div> */}
               {/* <div className="flex flex-col gap-3">
                 <Label htmlFor="status">Status</Label>
                 <Select defaultValue={item.status}>

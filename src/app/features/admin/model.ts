@@ -3,7 +3,8 @@ import { addDoc, collection, getDoc, getDocs, query, Timestamp, where } from "fi
 import { AdminType, CreateAdminType } from "./type"
 import { hashPassword } from "../login/password"
 
-const adminRef = collection(db, 'admins')
+const COLLECTION = "admins";
+const adminRef = collection(db, COLLECTION)
 
 export const findAdminByEmail = async (email: string): Promise<AdminType> => {
     const exitedAdmin = await getDocs(query(adminRef, where('email', '==', email)))
