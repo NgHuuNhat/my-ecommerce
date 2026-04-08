@@ -5,7 +5,8 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from './search'
 import { SearchIcon } from 'lucide-react'
 
 export default async function CategoriesPage() {
-    const res = await fetch("http://localhost:3000/api/categories", {
+    const baseUrl = process.env.NEXTAUTH_URL
+    const res = await fetch(`${baseUrl}/api/categories`, {
         cache: "no-store", // luôn fresh data
     })
 
