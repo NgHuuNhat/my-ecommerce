@@ -94,6 +94,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 import { GripVerticalIcon, CircleCheckIcon, LoaderIcon, EllipsisVerticalIcon, Columns3Icon, ChevronDownIcon, PlusIcon, ChevronsLeftIcon, ChevronLeftIcon, ChevronRightIcon, ChevronsRightIcon, TrendingUpIcon, ArrowUpIcon, ArrowDownIcon, Trash2, Pen } from "lucide-react"
+import Link from "next/link"
 
 // export const schema = z.object({
 //   id: z.number(),
@@ -640,11 +641,18 @@ export function DataTable({
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button variant="outline" size="sm">
+          <Link href={"/admin/categories/new"}>
+            <Button variant="outline" size="sm">
+              <PlusIcon
+              />
+              <span className="hidden lg:inline">Add Section</span>
+            </Button>
+          </Link>
+          {/* <Button variant="outline" size="sm">
             <PlusIcon
             />
             <span className="hidden lg:inline">Add Section</span>
-          </Button>
+          </Button> */}
         </div>
       </div>
       <TabsContent

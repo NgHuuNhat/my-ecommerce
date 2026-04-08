@@ -9,7 +9,6 @@ export async function proxy(req: NextRequest) {
   });
 
   const { pathname } = req.nextUrl;
-
   console.log(`>>> Path: ${pathname} | Login: ${!!token}`);
 
   // ✅ 1. Chưa login mà vào /admin → redirect login
@@ -22,9 +21,15 @@ export async function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL("/admin", req.url));
   }
 
+
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/admin", "/login"],
+  matcher: [
+    "/admin/:path*",
+    "/admin",
+    "/login",
+  ],
 };
