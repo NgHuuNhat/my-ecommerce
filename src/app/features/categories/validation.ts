@@ -9,10 +9,10 @@ export const categorySchema = z.object({
   slug: z
     .string()
     // .min(2, "Slug quá ngắn")
-    .max(100)
-    .regex(/^[a-z0-9-]+$/, "Slug chỉ gồm chữ thường, số và dấu -"),
+    .max(100),
+    // .regex(/^[a-z0-9-]+$/, "Slug chỉ gồm chữ thường, số và dấu -"),
 
   description: z
     .string()
-    .min(10, "Description quá ngắn. Phải tối thiểu 10 ký tự.")
+    .min(2, "Description quá ngắn. Phải tối thiểu 2 ký tự.")
 })

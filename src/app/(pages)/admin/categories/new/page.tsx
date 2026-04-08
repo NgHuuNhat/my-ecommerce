@@ -26,7 +26,7 @@ export default function NewCategory() {
     const router = useRouter()
 
     const form = useForm<z.infer<typeof categorySchema>>({
-        // resolver: zodResolver(categorySchema),
+        resolver: zodResolver(categorySchema),
         defaultValues: {
             name: "",
             slug: "",

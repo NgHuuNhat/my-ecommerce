@@ -95,6 +95,8 @@ import {
 } from "@/components/ui/tabs"
 import { GripVerticalIcon, CircleCheckIcon, LoaderIcon, EllipsisVerticalIcon, Columns3Icon, ChevronDownIcon, PlusIcon, ChevronsLeftIcon, ChevronLeftIcon, ChevronRightIcon, ChevronsRightIcon, TrendingUpIcon, ArrowUpIcon, ArrowDownIcon, Trash2, Pen } from "lucide-react"
 import Link from "next/link"
+import { formatDate } from "@/app/features/categories/format-date"
+// import { formatDate } from "@/app/features/categories/format-date"
 
 // export const schema = z.object({
 //   id: z.number(),
@@ -111,8 +113,8 @@ export const schema = z.object({
   name: z.string(),
   slug: z.string(),
   description: z.string(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
+  created_at: z.string(),
+  updated_at: z.string(),
 })
 
 // Create a separate component for the drag handle
@@ -388,7 +390,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     ),
   },
   {
-    accessorKey: "createdAt",
+    accessorKey: "created_at",
     header: "Created At",
     cell: ({ row }) => (
       <Badge variant="outline" className="px-1.5 text-muted-foreground">
@@ -398,12 +400,12 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
           <LoaderIcon
           />
         )} */}
-        {row.original.createdAt || "01/01/2001"}
+        {formatDate(row.original.created_at) || "01/01/2001"}
       </Badge>
     ),
   },
   {
-    accessorKey: "updatedAt",
+    accessorKey: "updated_at",
     header: "Updated At",
     cell: ({ row }) => (
       <Badge variant="outline" className="px-1.5 text-muted-foreground">
@@ -413,7 +415,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
           <LoaderIcon
           />
         )} */}
-        {row.original.updatedAt || "02/02/2002"}
+        {formatDate(row.original.updated_at) || "02/02/2002"}
       </Badge>
     ),
   },
@@ -482,7 +484,16 @@ export function DataTable({
 }: {
   data: z.infer<typeof schema>[]
 }) {
-  const [data, setData] = React.useState(() => initialData)
+
+  // const [data, setData] = React.useState(() => initialData)
+  const [data, setData] = React.useState(() =>
+    [...initialData].sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() -
+        new Date(a.created_at).getTime()
+    )
+  )
+
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
@@ -958,16 +969,16 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
                 </Select>
               </div> */}
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            {/* <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-3">
                 <Label htmlFor="target">Target</Label>
-                <Input id="target" defaultValue={item.createdAt} />
+                <Input id="target" defaultValue={item.created_at} />
               </div>
               <div className="flex flex-col gap-3">
                 <Label htmlFor="limit">Limit</Label>
-                <Input id="limit" defaultValue={item.updatedAt} />
+                <Input id="limit" defaultValue={item.updated_at} />
               </div>
-            </div>
+            </div> */}
             {/* <div className="flex flex-col gap-3">
               <Label htmlFor="reviewer">Reviewer</Label>
               <Select defaultValue={item.reviewer}>
