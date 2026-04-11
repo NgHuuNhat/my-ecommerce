@@ -12,55 +12,46 @@ import {
   startAt,
   endAt,
 } from "firebase/firestore";
+import { CategoryType } from "./type";
 
 const COLLECTION = "categories";
 
 // GET ALL
-export const getCategories = async (keyword: string = '') => {
-  // const snapshot = await getDocs(collection(db, COLLECTION));
-  // const normalizedKeyword = keyword.trim().toLowerCase()
+export const getCategories = async (
+  keyword: string = '',
+  sortField: string = '',
+  // sortOrder: string = '',
+  sortOrder: "asc" | "desc" = "desc"
+  // keyword?: string,
+  // sortField?: string,
+  // sortOrder?: "asc" | "desc",
+) => {
   const colRef = collection(db, COLLECTION)
   let q
   if (keyword) {
     const kw = keyword.trim().toLowerCase()
     q = query(
       colRef,
-      // orderBy("name"),
-      // where("name", ">=", kw),
-      // where("name", "<=", kw + "\uf8ff")
-
       orderBy("name_lowercase"),
       startAt(kw),
       endAt(kw + "\uf8ff")
     )
   } else {
-    q = query(colRef, orderBy("created_at", "desc"))
+    if (sortField && sortOrder) {
+      q = query(colRef, orderBy(sortField, sortOrder))
+    } else {
+      q = query(colRef)
+    }
   }
 
   const snapshot = await getDocs(q)
-  return snapshot.docs
+  const data: CategoryType[] = snapshot.docs
     .map((doc) => ({
       id: doc.id,
-      ...doc.data(),
+      ...(doc.data() as Omit<CategoryType, "id">),
     }))
-
-  // .filter((item: any) => {
-
-  //   // bỏ item đã xoá
-  //   if (item.deleted_at) return false
-  //   // nếu không có keyword → lấy hết
-  //   if (!normalizedKeyword) return true
-
-  //   const matchId = item.id
-  //     ?.toLowerCase()
-  //     .includes(normalizedKeyword)
-
-  //   const matchName = item.name
-  //     ?.toLowerCase()
-  //     .includes(normalizedKeyword)
-
-  //   return matchName || matchId
-  // })
+    .filter((item) => !item.deleted_at)
+  return data
 };
 
 // GET ONE

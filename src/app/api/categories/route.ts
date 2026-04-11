@@ -22,8 +22,16 @@ import { NextRequest } from "next/server";
 export async function GET(req: NextRequest) {
   try {
     const keyword = req.nextUrl.searchParams.get("keyword") || ""
+    const sortField = req.nextUrl.searchParams.get("sortField") || ""
+    // const sortOrder = req.nextUrl.searchParams.get("sortOrder") || ""
+    const sortOrderParam = req.nextUrl.searchParams.get("sortOrder")
 
-    const data = await getCategories(keyword)
+    const sortOrder: "asc" | "desc" =
+      sortOrderParam === "asc" || sortOrderParam === "desc"
+        ? sortOrderParam
+        : "desc" // default
+
+    const data = await getCategories(keyword, sortField, sortOrder)
 
     return Response.json({
       success: true,

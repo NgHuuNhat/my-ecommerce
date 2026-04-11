@@ -97,6 +97,7 @@ import { GripVerticalIcon, CircleCheckIcon, LoaderIcon, EllipsisVerticalIcon, Co
 import Link from "next/link"
 import { formatDate } from "@/app/features/categories/format-date"
 import SearchPage from "./search"
+import { useRouter, useSearchParams } from "next/navigation"
 
 // import { formatDate } from "@/app/features/categories/format-date"
 
@@ -574,6 +575,25 @@ export function DataTable({
     }
   }
 
+  {/* sort-page */ }
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const sortField = searchParams.get("sortField") || "created_at"
+  const sortOrder = searchParams.get("sortOrder") || "desc"
+
+  const updateParams = (key: string, value: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+
+    if (value === "default") {
+      params.delete(key)
+    } else {
+      params.set(key, value)
+    }
+
+    router.push(`?${params.toString()}`)
+  }
+
   return (
     <Tabs
       defaultValue="outline"
@@ -587,30 +607,42 @@ export function DataTable({
       <div className="flex items-center justify-between px-4 lg:px-6">
 
         <div className="flex gap-2">
-          <Select>
+          <Select
+            value={sortField}
+            onValueChange={(value) => updateParams("sortField", value)}
+          >
             <SelectTrigger className="w-full max-w-48">
               <SelectValue placeholder="Select sort" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Sort</SelectLabel>
-                <SelectItem value="default">Select sort</SelectItem>
-                <SelectItem value="id">ID</SelectItem>
-                <SelectItem value="name">Name</SelectItem>
-                <SelectItem value="slug">Slug</SelectItem>
-                <SelectItem value="description">Description</SelectItem>
+                {/* <SelectItem value="default">Default</SelectItem> */}
+                {/* <SelectItem value="id">ID</SelectItem> */}
+                <SelectItem value="name_lowercase">Name</SelectItem>
+                {/* <SelectItem value="slug">Slug</SelectItem> */}
+                {/* <SelectItem value="description">Description</SelectItem> */}
                 <SelectItem value="created_at">Created At</SelectItem>
-                <SelectItem value="update_at">Updated At</SelectItem>
+                {/* <SelectItem value="update_at">Updated At</SelectItem> */}
               </SelectGroup>
             </SelectContent>
           </Select>
 
           <div defaultValue="desc" className="button-sort flex gap-2">
-            <Button value="asc" className="tang-dan" variant="outline" size="icon" aria-label="Submit">
-              <ArrowUpIcon />
+            <Button
+              onClick={() => updateParams("sortOrder", "desc")}
+              variant={sortOrder === "desc" ? "default" : "outline"}
+              value="desc" className="giam-dan" aria-label="Submit">
+              Mới nhất
+              {/* <ArrowDownIcon /> */}
             </Button>
-            <Button value="desc" className="giam-dan" variant="outline" size="icon" aria-label="Submit">
-              <ArrowDownIcon />
+
+            <Button
+              onClick={() => updateParams("sortOrder", "asc")}
+              variant={sortOrder === "asc" ? "default" : "outline"}
+              value="asc" className="tang-dan" aria-label="Submit">
+              Cũ nhất
+              {/* <ArrowUpIcon /> */}
             </Button>
           </div>
         </div>
