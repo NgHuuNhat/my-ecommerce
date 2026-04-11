@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { SearchIcon } from "lucide-react"
 
 function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (
@@ -143,6 +144,19 @@ function InputGroupTextarea({
       )}
       {...props}
     />
+  )
+}
+
+export default function SearchPage() {
+  return (
+    <div className='search-page px-4 lg:px-6'>
+      <InputGroup>
+        <InputGroupInput placeholder="Search..." />
+        <InputGroupAddon>
+          <SearchIcon />
+        </InputGroupAddon>
+      </InputGroup>
+    </div>
   )
 }
 

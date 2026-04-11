@@ -96,6 +96,8 @@ import {
 import { GripVerticalIcon, CircleCheckIcon, LoaderIcon, EllipsisVerticalIcon, Columns3Icon, ChevronDownIcon, PlusIcon, ChevronsLeftIcon, ChevronLeftIcon, ChevronRightIcon, ChevronsRightIcon, TrendingUpIcon, ArrowUpIcon, ArrowDownIcon, Trash2, Pen } from "lucide-react"
 import Link from "next/link"
 import { formatDate } from "@/app/features/categories/format-date"
+import SearchPage from "./search"
+
 // import { formatDate } from "@/app/features/categories/format-date"
 
 // export const schema = z.object({
@@ -479,6 +481,7 @@ function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
   )
 }
 
+// table-page
 export function DataTable({
   data: initialData,
 }: {
@@ -557,8 +560,13 @@ export function DataTable({
   return (
     <Tabs
       defaultValue="outline"
-      className="w-full flex-col justify-start gap-6"
+      className="table-page w-full flex-col justify-start gap-6"
     >
+
+      {/* search-page */}
+      <SearchPage />
+
+      {/* sort-page */}
       <div className="flex items-center justify-between px-4 lg:px-6">
 
         <div className="flex gap-2">
@@ -569,22 +577,22 @@ export function DataTable({
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Sort</SelectLabel>
-                <SelectItem value="none">Select sort</SelectItem>
+                <SelectItem value="default">Select sort</SelectItem>
                 <SelectItem value="id">ID</SelectItem>
                 <SelectItem value="name">Name</SelectItem>
                 <SelectItem value="slug">Slug</SelectItem>
                 <SelectItem value="description">Description</SelectItem>
-                <SelectItem value="createdAt">Created At</SelectItem>
-                <SelectItem value="updateAt">Updated At</SelectItem>
+                <SelectItem value="created_at">Created At</SelectItem>
+                <SelectItem value="update_at">Updated At</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
 
-          <div className="flex gap-2">
-            <Button variant="outline" size="icon" aria-label="Submit">
+          <div defaultValue="desc" className="button-sort flex gap-2">
+            <Button value="asc" className="tang-dan" variant="outline" size="icon" aria-label="Submit">
               <ArrowUpIcon />
             </Button>
-            <Button variant="outline" size="icon" aria-label="Submit">
+            <Button value="desc" className="giam-dan" variant="outline" size="icon" aria-label="Submit">
               <ArrowDownIcon />
             </Button>
           </div>
@@ -592,8 +600,8 @@ export function DataTable({
 
         {/* <Label htmlFor="view-selector" className="sr-only">
           View
-        </Label> */}
-        {/* <Select defaultValue="outline">
+        </Label>
+        <Select defaultValue="outline">
           <SelectTrigger
             className="flex w-fit @4xl/main:hidden"
             size="sm"
@@ -609,8 +617,8 @@ export function DataTable({
               <SelectItem value="focus-documents">Focus Documents</SelectItem>
             </SelectGroup>
           </SelectContent>
-        </Select> */}
-        {/* <TabsList className="hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:bg-muted-foreground/30 **:data-[slot=badge]:px-1 @4xl/main:flex">
+        </Select>
+        <TabsList className="hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:bg-muted-foreground/30 **:data-[slot=badge]:px-1 @4xl/main:flex">
           <TabsTrigger value="outline">Outline</TabsTrigger>
           <TabsTrigger value="past-performance">
             Past Performance <Badge variant="secondary">3</Badge>
@@ -666,7 +674,9 @@ export function DataTable({
             <span className="hidden lg:inline">Add Section</span>
           </Button> */}
         </div>
+
       </div>
+
       <TabsContent
         value="outline"
         className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
