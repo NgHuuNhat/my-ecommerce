@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { SearchIcon } from "lucide-react"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { debounce } from "lodash"
 
 function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (
@@ -148,10 +150,53 @@ function InputGroupTextarea({
 }
 
 export default function SearchPage() {
+  const searchParams = useSearchParams()
+  const [keyword, setKeyword] = React.useState<string | undefined>(searchParams.get('keyword') || "")
+  const pathName = usePathname()
+  const router = useRouter()
+
+  // const onSubmitSearch = () => {
+  //   const params = new URLSearchParams(searchParams)
+  //   if (keyword) {
+  //     params.set('keyword', keyword)
+  //   } else {
+  //     params.delete('keyword')
+  //   }
+
+  //   replace(`${pathName}?${params.toString()}`)
+  // }
+
+  const debouncedSearch = React.useMemo(
+    () =>
+      debounce((value: string) => {
+        const params = new URLSearchParams(searchParams)
+
+        if (value) params.set('keyword', value)
+        else params.delete('keyword')
+
+        router.replace(`${pathName}?${params.toString()}`)
+      }, 500),
+    []
+  )
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value)
+    debouncedSearch(e.target.value)
+  }
+
   return (
     <div className='search-page px-4 lg:px-6'>
       <InputGroup>
-        <InputGroupInput placeholder="Search..." />
+        <InputGroupInput
+          value={keyword}
+          onChange={handleChange}
+          placeholder="Search..."
+        // onKeyDown={(e) => {
+        //   if (e.key === 'Enter') {
+        //     onSubmitSearch()
+        //   }
+        // }}
+        />
         <InputGroupAddon>
           <SearchIcon />
         </InputGroupAddon>

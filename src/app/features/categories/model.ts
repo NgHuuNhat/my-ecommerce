@@ -11,15 +11,33 @@ import {
 const COLLECTION = "categories";
 
 // GET ALL
-export const getCategories = async () => {
+export const getCategories = async (keyword: string = '') => {
   const snapshot = await getDocs(collection(db, COLLECTION));
+  const normalizedKeyword = keyword.trim().toLowerCase()
 
   return snapshot.docs
     .map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }))
-    .filter((item: any) => !item.deleted_at);
+
+    .filter((item: any) => {
+
+      // bỏ item đã xoá
+      if (item.deleted_at) return false
+      // nếu không có keyword → lấy hết
+      if (!normalizedKeyword) return true
+
+      const matchId = item.id
+        ?.toLowerCase()
+        .includes(normalizedKeyword)
+
+      const matchName = item.name
+        ?.toLowerCase()
+        .includes(normalizedKeyword)
+
+      return matchName || matchId
+    })
 };
 
 // GET ONE

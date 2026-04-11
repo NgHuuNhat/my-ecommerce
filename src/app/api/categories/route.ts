@@ -3,19 +3,37 @@ import { categorySchema } from "@/app/features/categories/validation";
 import { NextRequest } from "next/server";
 
 // GET /api/categories
-export async function GET() {
+// export async function GET() {
+//   try {
+//     const data = await getCategories();
+
+//     return Response.json({
+//       success: true,
+//       data,
+//     });
+//   } catch (error) {
+//     return Response.json(
+//       { success: false, message: "Failed to fetch categories" },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+export async function GET(req: NextRequest) {
   try {
-    const data = await getCategories();
+    const keyword = req.nextUrl.searchParams.get("keyword") || ""
+
+    const data = await getCategories(keyword)
 
     return Response.json({
       success: true,
       data,
-    });
+    })
   } catch (error) {
     return Response.json(
       { success: false, message: "Failed to fetch categories" },
       { status: 500 }
-    );
+    )
   }
 }
 

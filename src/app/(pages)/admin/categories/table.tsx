@@ -111,7 +111,7 @@ import SearchPage from "./search"
 // })
 
 export const schema = z.object({
-  id: z.number(),
+  id: z.string(),
   name: z.string(),
   slug: z.string(),
   description: z.string(),
@@ -120,7 +120,7 @@ export const schema = z.object({
 })
 
 // Create a separate component for the drag handle
-function DragHandle({ id }: { id: number }) {
+function DragHandle({ id }: { id: string }) {
   const { attributes, listeners } = useSortable({
     id,
   })
@@ -497,6 +497,16 @@ export function DataTable({
         new Date(a.created_at).getTime()
     )
   )
+
+  React.useEffect(() => {
+    setData(
+      [...initialData].sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() -
+          new Date(a.created_at).getTime()
+      )
+    )
+  }, [initialData])
 
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
