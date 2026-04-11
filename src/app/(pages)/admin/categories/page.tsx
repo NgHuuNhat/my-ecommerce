@@ -11,7 +11,7 @@ interface IProps {
 
 export default async function CategoriesPage({ searchParams }: IProps) {
     const { keyword = '' } = await searchParams
-    console.log("-------------------keyword", keyword)
+    // console.log("-------------------keyword", keyword)
 
     const params = new URLSearchParams()
     if (keyword) params.set("keyword", keyword)

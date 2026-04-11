@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { SearchIcon } from "lucide-react"
+import { SearchIcon, X } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { debounce } from "lodash"
 
@@ -187,6 +187,7 @@ export default function SearchPage() {
   return (
     <div className='search-page px-4 lg:px-6'>
       <InputGroup>
+
         <InputGroupInput
           value={keyword}
           onChange={handleChange}
@@ -197,9 +198,35 @@ export default function SearchPage() {
         //   }
         // }}
         />
+
+        {/* Clear button */}
+        {keyword && (
+          <InputGroupAddon align="inline-end">
+            <InputGroupButton
+              onClick={() => {
+                setKeyword("")
+                debouncedSearch.cancel() // 🚨 tránh call cũ
+
+                const params = new URLSearchParams(searchParams)
+                params.delete("keyword")
+                router.replace(`${pathName}?${params.toString()}`)
+              }}
+            >
+              <X className="text-blue-500"/>
+            </InputGroupButton>
+          </InputGroupAddon>
+        )}
+
+        {/* Search icon */}
         <InputGroupAddon>
-          <SearchIcon />
+          <SearchIcon
+            className={cn(
+              "transition-colors",
+              // keyword ? "text-foreground" : "text-muted-foreground"
+              keyword ? "text-blue-500" : "text-muted-foreground"
+            )} />
         </InputGroupAddon>
+
       </InputGroup>
     </div>
   )
