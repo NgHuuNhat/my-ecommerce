@@ -25,5 +25,5 @@ export const formatDate = (iso: string) => {
     hour12: false,
   })
 
-  return `${datePart} ${timePart}`
+  return `${timePart} - ${datePart}`
 }

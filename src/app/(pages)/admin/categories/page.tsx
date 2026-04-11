@@ -12,7 +12,7 @@ interface IProps {
 }
 
 export default async function CategoriesPage({ searchParams }: IProps) {
-    const { keyword = '', sortField, sortOrder } = await searchParams
+    const { keyword = '', sortField = 'created_at', sortOrder = 'desc' } = await searchParams
     console.log("-------------------searchParams", keyword, sortField, sortOrder)
 
     const params = new URLSearchParams()

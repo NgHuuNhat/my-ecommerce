@@ -579,8 +579,8 @@ export function DataTable({
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const sortField = searchParams.get("sortField") || "created_at"
-  const sortOrder = searchParams.get("sortOrder") || "desc"
+  const sortField = searchParams.get("sortField") || 'created_at'
+  const sortOrder = searchParams.get("sortOrder") || 'desc'
 
   const updateParams = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString())
@@ -593,6 +593,15 @@ export function DataTable({
 
     router.push(`?${params.toString()}`)
   }
+
+  // const clearFilters = () => {
+  //   const params = new URLSearchParams(searchParams.toString())
+
+  //   params.delete("sortField")
+  //   params.delete("sortOrder")
+
+  //   router.push(`?${params.toString()}`)
+  // }
 
   return (
     <Tabs
@@ -645,6 +654,15 @@ export function DataTable({
               {/* <ArrowUpIcon /> */}
             </Button>
           </div>
+
+          {/* {(sortField || sortOrder) && (
+            <Button
+              onClick={clearFilters}
+              variant="outline"
+            >
+              ✕
+            </Button>
+          )} */}
         </div>
 
         {/* <Label htmlFor="view-selector" className="sr-only">

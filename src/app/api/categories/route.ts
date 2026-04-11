@@ -23,9 +23,7 @@ export async function GET(req: NextRequest) {
   try {
     const keyword = req.nextUrl.searchParams.get("keyword") || ""
     const sortField = req.nextUrl.searchParams.get("sortField") || ""
-    // const sortOrder = req.nextUrl.searchParams.get("sortOrder") || ""
     const sortOrderParam = req.nextUrl.searchParams.get("sortOrder")
-
     const sortOrder: "asc" | "desc" =
       sortOrderParam === "asc" || sortOrderParam === "desc"
         ? sortOrderParam

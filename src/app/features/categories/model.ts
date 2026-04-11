@@ -19,12 +19,8 @@ const COLLECTION = "categories";
 // GET ALL
 export const getCategories = async (
   keyword: string = '',
-  sortField: string = '',
-  // sortOrder: string = '',
-  sortOrder: "asc" | "desc" = "desc"
-  // keyword?: string,
-  // sortField?: string,
-  // sortOrder?: "asc" | "desc",
+  sortField: string = 'created_at',
+  sortOrder: "asc" | "desc" = "desc",
 ) => {
   const colRef = collection(db, COLLECTION)
   let q
@@ -38,9 +34,14 @@ export const getCategories = async (
     )
   } else {
     if (sortField && sortOrder) {
-      q = query(colRef, orderBy(sortField, sortOrder))
+      q = query(
+        colRef,
+        orderBy(sortField, sortOrder))
     } else {
-      q = query(colRef)
+      q = query(
+        colRef,
+        orderBy("created_at", "desc"))
+
     }
   }
 
