@@ -175,7 +175,7 @@ export default function SearchPage() {
         else params.delete('keyword')
 
         router.replace(`${pathName}?${params.toString()}`)
-      }, 500),
+      }, 100),
     []
   )
 
@@ -186,12 +186,14 @@ export default function SearchPage() {
 
   return (
     <div className='search-page px-4 lg:px-6'>
-      <InputGroup>
+      {/* <InputGroup className="outline-none focus:outline-none focus-visible:ring-0 focus:ring-0"> */}
+      <InputGroup className="!ring-0 !ring-transparent !border-input">
 
         <InputGroupInput
           value={keyword}
           onChange={handleChange}
           placeholder="Search..."
+          className="text-blue-500"
         // onKeyDown={(e) => {
         //   if (e.key === 'Enter') {
         //     onSubmitSearch()
@@ -212,7 +214,7 @@ export default function SearchPage() {
                 router.replace(`${pathName}?${params.toString()}`)
               }}
             >
-              <X className="text-blue-500"/>
+              <X className="text-blue-500" />
             </InputGroupButton>
           </InputGroupAddon>
         )}
