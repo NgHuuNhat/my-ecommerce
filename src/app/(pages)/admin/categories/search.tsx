@@ -187,7 +187,15 @@ export default function SearchPage() {
   return (
     <div className='search-page px-4 lg:px-6'>
       {/* <InputGroup className="outline-none focus:outline-none focus-visible:ring-0 focus:ring-0"> */}
-      <InputGroup className="!ring-0 !ring-transparent !border-input">
+      <InputGroup
+        // className="!ring-0 !ring-transparent !border-input"
+        className={cn(
+          "!ring-0 !ring-transparent",
+          keyword
+            ? "!border-blue-500 focus-within:!border-blue-500"
+            : "!border-input"
+        )}
+      >
 
         <InputGroupInput
           value={keyword}

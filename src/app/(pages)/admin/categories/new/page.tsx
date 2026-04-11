@@ -47,6 +47,7 @@ export default function NewCategory() {
 
     useEffect(() => {
         form.setValue("slug", slugify(nameValue || ""))
+        form.setValue("description", slugify(nameValue || ""))
     }, [nameValue])
 
     //   const onSubmit = async (data: z.infer<typeof categorySchema>) => {

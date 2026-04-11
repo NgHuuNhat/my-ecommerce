@@ -488,25 +488,32 @@ export function DataTable({
   data: z.infer<typeof schema>[]
 }) {
 
-  //
-  // const [data, setData] = React.useState(() => initialData)
-  const [data, setData] = React.useState(() =>
-    [...initialData].sort(
-      (a, b) =>
-        new Date(b.created_at).getTime() -
-        new Date(a.created_at).getTime()
-    )
-  )
-
+  //auto
+  const [data, setData] = React.useState(() => initialData)
   React.useEffect(() => {
-    setData(
-      [...initialData].sort(
-        (a, b) =>
-          new Date(b.created_at).getTime() -
-          new Date(a.created_at).getTime()
-      )
-    )
+    setData(initialData)
   }, [initialData])
+
+  //desc
+  // const [data, setData] = React.useState(
+  //   // initialData
+  //   () =>
+  //     [...initialData].sort(
+  //       (a, b) =>
+  //         new Date(b.created_at).getTime() -
+  //         new Date(a.created_at).getTime()
+  //     )
+  // )
+  // React.useEffect(() => {
+  //   setData(
+  //     // initialData
+  //     [...initialData].sort(
+  //       (a, b) =>
+  //         new Date(b.created_at).getTime() -
+  //         new Date(a.created_at).getTime()
+  //     )
+  //   )
+  // }, [initialData])
 
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
