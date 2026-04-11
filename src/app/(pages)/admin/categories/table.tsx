@@ -675,7 +675,7 @@ export function DataTable({
             <Button variant="outline" size="sm">
               <PlusIcon
               />
-              <span className="hidden lg:inline">Add Section</span>
+              <span className="hidden lg:inline">Add Category</span>
             </Button>
           </Link>
           {/* <Button variant="outline" size="sm">

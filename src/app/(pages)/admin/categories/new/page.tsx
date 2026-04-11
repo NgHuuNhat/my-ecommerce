@@ -21,6 +21,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import z from 'zod'
 import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
 
 export default function NewCategory() {
     const router = useRouter()
@@ -173,12 +174,12 @@ export default function NewCategory() {
                 </FieldGroup>
 
                 {/* SUBMIT */}
-                <button
+                <Button
                     type="submit"
-                    className="bg-black text-white px-4 py-2 rounded"
+                    className='cursor-pointer'
                 >
                     Create Category
-                </button>
+                </Button>
             </form>
         </div>
     )
