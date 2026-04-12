@@ -36,6 +36,8 @@ export async function GET(req: NextRequest) {
       data,
     })
   } catch (error) {
+    // console.error("🔥 FIRESTORE ERROR:", error)
+    // throw error
     return Response.json(
       { success: false, message: "Failed to fetch categories" },
       { status: 500 }

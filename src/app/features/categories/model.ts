@@ -24,6 +24,7 @@ export const getCategories = async (
 ) => {
   const colRef = collection(db, COLLECTION)
   let q
+
   if (keyword) {
     const kw = keyword.trim().toLowerCase()
     q = query(
@@ -41,7 +42,6 @@ export const getCategories = async (
       q = query(
         colRef,
         orderBy("created_at", "desc"))
-
     }
   }
 
@@ -53,7 +53,7 @@ export const getCategories = async (
     }))
     .filter((item) => !item.deleted_at)
   return data
-};
+}
 
 // GET ONE
 export const getCategoryById = async (id: string) => {
