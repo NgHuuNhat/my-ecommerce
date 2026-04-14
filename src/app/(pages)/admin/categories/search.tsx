@@ -200,7 +200,8 @@ export default function SearchPage() {
         <InputGroupInput
           value={keyword}
           onChange={handleChange}
-          placeholder="Search..."
+          // placeholder="Search..."
+          placeholder="Search by Name or ID..."
           className="text-blue-500"
         // onKeyDown={(e) => {
         //   if (e.key === 'Enter') {
