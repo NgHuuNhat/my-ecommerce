@@ -16,43 +16,112 @@ import { CategoryType } from "./type";
 
 const COLLECTION = "categories";
 
-// GET ALL
+// GET ALL (co search name)
+// export const getCategories = async (
+//   keyword: string = '',
+//   sortField: string = 'created_at',
+//   sortOrder: "asc" | "desc" = "desc",
+// ) => {
+//   const colRef = collection(db, COLLECTION)
+
+//   let q
+
+//   if (keyword) {
+//     const kw = keyword.trim().toLowerCase()
+//     q = query(
+//       colRef,
+//       orderBy("name_lowercase"),
+//       startAt(kw),
+//       endAt(kw + "\uf8ff")
+//     )
+//   } else {
+//     if (sortField && sortOrder) {
+//       q = query(
+//         colRef,
+//         orderBy(sortField, sortOrder))
+//     } else {
+//       q = query(
+//         colRef,
+//         orderBy("created_at", "desc"))
+//     }
+//   }
+
+//   const snapshot = await getDocs(q)
+//   const data: CategoryType[] = snapshot.docs
+//     .map((doc) => ({
+//       id: doc.id,
+//       ...(doc.data() as Omit<CategoryType, "id">),
+//     }))
+//     .filter((item) => !item.deleted_at)
+//   return data
+// }
+
+// GET ALL (co search id-name)
 export const getCategories = async (
   keyword: string = '',
   sortField: string = 'created_at',
   sortOrder: "asc" | "desc" = "desc",
 ) => {
   const colRef = collection(db, COLLECTION)
-  let q
 
+  // 🔥 1. Nếu có keyword → check ID trước
   if (keyword) {
-    const kw = keyword.trim().toLowerCase()
-    q = query(
+    const kw = keyword.trim()
+
+    // 👉 tìm theo ID (exact match)
+    const docRef = doc(db, COLLECTION, kw)
+    const docSnap = await getDoc(docRef)
+
+    if (docSnap.exists()) {
+      const item = {
+        id: docSnap.id,
+        ...(docSnap.data() as Omit<CategoryType, "id">),
+      }
+
+      // 👉 filter deleted
+      if (!item.deleted_at) {
+        return [item]
+      }
+      return []
+    }
+
+    // 👉 nếu không phải ID → search name
+    const lowerKw = kw.toLowerCase()
+
+    const q = query(
       colRef,
       orderBy("name_lowercase"),
-      startAt(kw),
-      endAt(kw + "\uf8ff")
+      startAt(lowerKw),
+      endAt(lowerKw + "\uf8ff")
     )
+
+    const snapshot = await getDocs(q)
+
+    return snapshot.docs
+      .map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as Omit<CategoryType, "id">),
+      }))
+      .filter((item) => !item.deleted_at)
+  }
+
+  // 🔥 2. Không có keyword → sort bình thường
+  let q
+
+  if (sortField && sortOrder) {
+    q = query(colRef, orderBy(sortField, sortOrder))
   } else {
-    if (sortField && sortOrder) {
-      q = query(
-        colRef,
-        orderBy(sortField, sortOrder))
-    } else {
-      q = query(
-        colRef,
-        orderBy("created_at", "desc"))
-    }
+    q = query(colRef, orderBy("created_at", "desc"))
   }
 
   const snapshot = await getDocs(q)
-  const data: CategoryType[] = snapshot.docs
+
+  return snapshot.docs
     .map((doc) => ({
       id: doc.id,
       ...(doc.data() as Omit<CategoryType, "id">),
     }))
     .filter((item) => !item.deleted_at)
-  return data
 }
 
 // GET ONE
