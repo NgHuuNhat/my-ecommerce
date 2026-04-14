@@ -462,7 +462,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
             className="bg-red-100 text-red-700 hover:bg-red-200"
             onClick={async () => {
               console.log("Delete", data)
-              const confirmDelete = confirm("Bạn có chắc muốn xóa?")
+              const confirmDelete = confirm(`Bạn có chắc muốn xóa "${data.name}"?`)
 
               if (!confirmDelete) return
 
