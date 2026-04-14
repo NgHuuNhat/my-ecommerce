@@ -19,6 +19,7 @@ import { NextRequest } from "next/server";
 //   }
 // }
 
+// GET ALL
 export async function GET(req: NextRequest) {
   try {
     const keyword = req.nextUrl.searchParams.get("keyword") || ""
@@ -80,6 +81,7 @@ export async function GET(req: NextRequest) {
 //   }
 // }
 
+// POST
 export async function POST(req: Request) {
   try {
     const body = await req.json()

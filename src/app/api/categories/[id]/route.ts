@@ -1,6 +1,32 @@
 import { deleteCategory, getCategoryById, updateCategory } from "@/app/features/categories/model";
 import { NextRequest } from "next/server";
 
+// GET ONE /api/categories/:id
+export async function GET(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await context.params
+
+    const data = await getCategoryById(id)
+
+    if (!data) {
+      return Response.json(
+        { message: "Category not found" },
+        { status: 404 }
+      )
+    }
+
+    return Response.json({ data })
+  } catch (error) {
+    return Response.json(
+      { message: "Failed to fetch category" },
+      { status: 500 }
+    )
+  }
+}
+
 // PATCH /api/categories/:id
 export async function PATCH(
     req: NextRequest,

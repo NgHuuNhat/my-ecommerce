@@ -125,6 +125,7 @@ function DragHandle({ id }: { id: string }) {
   const { attributes, listeners } = useSortable({
     id,
   })
+  // const router = useRouter()
 
   return (
     <Button
@@ -431,15 +432,20 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
       return (
         <div className="flex items-center gap-2">
           {/* Edit */}
-          <Button
-            size="sm"
-            className="bg-yellow-100 text-yellow-700 hover:bg-yellow-200 hover:text-yellow-800 cursor-pointer"
-            onClick={() => {
-              console.log("Edit", data)
-            }}
-          >
-            Edit <Pen />
-          </Button>
+          <Link href={`/admin/categories/edit/${data.id}`}>
+            <Button
+              size="sm"
+              className="bg-yellow-100 text-yellow-700 hover:bg-yellow-200 hover:text-yellow-800 cursor-pointer"
+              onClick={() => {
+                console.log("Edit", data)
+              }}
+            // onClick={() => {
+            //   router.push(`/admin/categories/edit/${data.id}`) // 👈 chuyển trang
+            // }}
+            >
+              Edit <Pen />
+            </Button>
+          </Link>
 
           {/* Delete */}
           <Button

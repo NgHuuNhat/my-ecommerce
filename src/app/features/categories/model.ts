@@ -26,7 +26,7 @@ export const getCategories = async (
   let q
 
   if (keyword) {
-    const kw = keyword.trim().toLowerCase()
+    const kw = keyword.trim().toLowerCase() 
     q = query(
       colRef,
       orderBy("name_lowercase"),

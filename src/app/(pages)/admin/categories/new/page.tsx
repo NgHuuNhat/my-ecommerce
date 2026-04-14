@@ -32,7 +32,8 @@ export default function NewCategoryPage() {
 
     return (
         <div className='new-categories-page px-4 md:px-6'>
-            <FormSubmitCategory onSubmit={onSubmit}/>
+            <h6 className='mb-5'>Create Category</h6>
+            <FormSubmitCategory onSubmit={onSubmit} />
         </div>
     )
 }
