@@ -79,7 +79,7 @@ export default function EditCategoryPage() {
             <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
                 <h6 className="mb-5">Edit Category</h6>
                 <Link href="/admin/categories">
-                    <Button variant="outline">←</Button>
+                    <Button>←</Button>
                 </Link>
             </div>
 

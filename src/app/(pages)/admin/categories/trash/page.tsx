@@ -143,7 +143,7 @@ export default function TrashPage() {
                         <p className="text-sm text-muted-foreground">Manage soft-deleted categories and restore or permanently delete items.</p>
                     </div>
                     <Link href="/admin/categories">
-                        <Button variant="outline">←</Button>
+                        <Button>←</Button>
                     </Link>
                 </div>
 
