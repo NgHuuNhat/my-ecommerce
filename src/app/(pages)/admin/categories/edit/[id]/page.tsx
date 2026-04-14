@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import FormSubmitCategory, { CategoryFormValues } from '../../form-submit'
+import { Button } from '@/components/ui/button'
 
 export default function EditCategoryPage() {
     const router = useRouter()
@@ -32,7 +33,7 @@ export default function EditCategoryPage() {
 
                 setData(result.data)
             } catch (err) {
-                 console.error("ERROR:", err) // 👈 thêm cái này
+                console.error("ERROR:", err) // 👈 thêm cái này
                 toast.error("Lỗi load data")
             } finally {
                 setLoading(false)
@@ -68,7 +69,14 @@ export default function EditCategoryPage() {
         }
     }
 
-    if (loading) return <div>Loading...</div>
+    if (loading) return (
+        <div className="px-4 md:px-6">
+            {/* <Button variant="secondary" disabled> */}
+                loading...
+                {/* <Spinner data-icon="inline-start" /> */}
+            {/* </Button> */}
+        </div>
+    )
 
     return (
         <div className="px-4 md:px-6">
