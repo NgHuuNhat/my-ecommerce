@@ -1,7 +1,7 @@
-import { deleteCategory, getCategoryById, updateCategory } from "@/app/features/categories/model";
-import { NextRequest } from "next/server";
+import { deleteCategory, deleteForever, getCategoryById, updateCategory } from "@/app/features/categories/model";
+import { NextRequest, NextResponse } from "next/server";
 
-// GET ONE /api/categories/:id
+// GET ONE /api/categories/:id (get one)
 export async function GET(
     req: NextRequest,
     context: { params: Promise<{ id: string }> }
@@ -12,22 +12,22 @@ export async function GET(
         const data = await getCategoryById(id)
 
         if (!data) {
-            return Response.json(
+            return NextResponse.json(
                 { message: "Category not found" },
                 { status: 404 }
             )
         }
 
-        return Response.json({ data })
+        return NextResponse.json({ data })
     } catch (error) {
-        return Response.json(
+        return NextResponse.json(
             { message: "Failed to fetch category" },
             { status: 500 }
         )
     }
 }
 
-// PATCH /api/categories/:id
+// PATCH /api/categories/:id (edit one)
 export async function PATCH(
     req: NextRequest,
     //   { params }: { params: { id: string } }
@@ -41,7 +41,7 @@ export async function PATCH(
         const existing = await getCategoryById(id);
 
         if (!existing) {
-            return Response.json(
+            return NextResponse.json(
                 { success: false, message: "Category not found" },
                 { status: 404 }
             );
@@ -49,39 +49,42 @@ export async function PATCH(
 
         await updateCategory(id, body);
 
-        return Response.json({
+        return NextResponse.json({
             success: true,
         });
     } catch (error) {
-        return Response.json(
+        return NextResponse.json(
             { success: false, message: "Failed to update category" },
             { status: 500 }
         );
     }
 }
 
-// DELETE /api/categories/:id (soft delete)
+// DELETE /api/categories/:id (soft delete or permanent delete)
 export async function DELETE(
     req: NextRequest,
-    //   { params }: { params: { id: string } }
     context: { params: Promise<{ id: string }> }
-
 ) {
     try {
-        // const { id } = params;
         const { id } = await context.params
+        const forceDelete = req.headers.get('X-Force-Delete') === 'true'
 
+        if (forceDelete) {
+            // Permanent delete
+            await deleteForever(id)
+        } else {
+            // Soft delete
+            await deleteCategory(id)
+        }
 
-        await deleteCategory(id);
-
-        return Response.json({
+        return NextResponse.json({
             success: true,
-            message: "Xoa thanh cong!"
-        });
+            message: "Xoá thành công!"
+        })
     } catch (error) {
-        return Response.json(
+        return NextResponse.json(
             { success: false, message: "Failed to delete category" },
             { status: 500 }
-        );
+        )
     }
 }

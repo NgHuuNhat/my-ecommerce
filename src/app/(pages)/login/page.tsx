@@ -4,7 +4,7 @@ import { CreateAdminType } from "@/app/features/admin/type"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { LoginForm } from "./form"
+import { FormLoginCustom } from "./form"
 
 export default function Page() {
   const router = useRouter()
@@ -29,7 +29,7 @@ export default function Page() {
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
-        <LoginForm onLogin={onLogin} />
+        <FormLoginCustom onLogin={onLogin} />
       </div>
     </div>
   )

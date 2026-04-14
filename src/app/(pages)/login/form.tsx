@@ -24,7 +24,7 @@ type LoginFormProps = React.ComponentProps<"div"> & {
   onLogin?: (data: FormValues) => void
 }
 
-export function LoginForm({ className, onLogin, ...props }: LoginFormProps) {
+export function FormLoginCustom({ className, onLogin, ...props }: LoginFormProps) {
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),

@@ -128,149 +128,150 @@ function DragHandle({ id }: { id: string }) {
   )
 }
 
-//header
-const columns: ColumnDef<z.infer<typeof schema>>[] = [
-  {
-    id: "drag",
-    header: () => null,
-    cell: ({ row }) => <DragHandle id={row.original.id} />,
-  },
-  {
-    id: "select",
-    header: ({ table }) => (
-      <div className="flex items-center justify-center">
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="flex items-center justify-center">
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      </div>
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "id",
-    header: "ID",
-    cell: ({ row }) => (
-      <div className="">
-        <Badge variant="outline" className="px-1.5 text-muted-foreground">
-          {row.original.id || "id"}
-        </Badge>
-      </div>
-    ),
-  },
-  {
-    accessorKey: "name",
-    header: "Name",
-    cell: ({ row }) => {
-      return <TableCellViewer item={row.original} />
+function createColumns(router: ReturnType<typeof useRouter>): ColumnDef<z.infer<typeof schema>>[] {
+  return [
+    {
+      id: "drag",
+      header: () => null,
+      cell: ({ row }) => <DragHandle id={row.original.id} />,
     },
-    enableHiding: false,
-  },
-  {
-    accessorKey: "slug",
-    header: "Slug",
-    cell: ({ row }) => (
-      <div className="w-32">
+    {
+      id: "select",
+      header: ({ table }) => (
+        <div className="flex items-center justify-center">
+          <Checkbox
+            checked={
+              table.getIsAllPageRowsSelected() ||
+              (table.getIsSomePageRowsSelected() && "indeterminate")
+            }
+            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+            aria-label="Select all"
+          />
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="flex items-center justify-center">
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Select row"
+          />
+        </div>
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "id",
+      header: "ID",
+      cell: ({ row }) => (
+        <div className="">
+          <Badge variant="outline" className="px-1.5 text-muted-foreground">
+            {row.original.id || "id"}
+          </Badge>
+        </div>
+      ),
+    },
+    {
+      accessorKey: "name",
+      header: "Name",
+      cell: ({ row }) => {
+        return <TableCellViewer item={row.original} />
+      },
+      enableHiding: false,
+    },
+    {
+      accessorKey: "slug",
+      header: "Slug",
+      cell: ({ row }) => (
+        <div className="w-32">
+          <Badge variant="outline" className="px-1.5 text-muted-foreground">
+            {row.original.slug || "slug"}
+          </Badge>
+        </div>
+      ),
+    },
+    {
+      accessorKey: "description",
+      header: "Description",
+      cell: ({ row }) => (
+        <div className="w-32">
+          <Badge variant="outline" className="px-1.5 text-muted-foreground">
+            {row.original.description || "description"}
+          </Badge>
+        </div>
+      ),
+    },
+    {
+      accessorKey: "created_at",
+      header: "Created At",
+      cell: ({ row }) => (
         <Badge variant="outline" className="px-1.5 text-muted-foreground">
-          {row.original.slug || "slug"}
+          {formatDate(row.original.created_at) || "01/01/2001"}
         </Badge>
-      </div>
-    ),
-  },
-  {
-    accessorKey: "description",
-    header: "Description",
-    cell: ({ row }) => (
-      <div className="w-32">
+      ),
+    },
+    {
+      accessorKey: "updated_at",
+      header: "Updated At",
+      cell: ({ row }) => (
         <Badge variant="outline" className="px-1.5 text-muted-foreground">
-          {row.original.description || "description"}
+          {formatDate(row.original.updated_at) || "02/02/2002"}
         </Badge>
-      </div>
-    ),
-  },
-  {
-    accessorKey: "created_at",
-    header: "Created At",
-    cell: ({ row }) => (
-      <Badge variant="outline" className="px-1.5 text-muted-foreground">
-        {formatDate(row.original.created_at) || "01/01/2001"}
-      </Badge>
-    ),
-  },
-  {
-    accessorKey: "updated_at",
-    header: "Updated At",
-    cell: ({ row }) => (
-      <Badge variant="outline" className="px-1.5 text-muted-foreground">
-        {formatDate(row.original.updated_at) || "02/02/2002"}
-      </Badge>
-    ),
-  },
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => {
-      const data = row.original
+      ),
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => {
+        const data = row.original
 
-      return (
-        <div className="flex items-center gap-2">
-          <Link href={`/admin/categories/edit/${data.id}`}>
+        return (
+          <div className="flex items-center gap-2">
+            <Link href={`/admin/categories/edit/${data.id}`}>
+              <Button
+                size="sm"
+                className="bg-yellow-100 text-yellow-700 hover:bg-yellow-200 hover:text-yellow-800 cursor-pointer"
+              >
+                Edit <Pen />
+              </Button>
+            </Link>
+
             <Button
               size="sm"
-              className="bg-yellow-100 text-yellow-700 hover:bg-yellow-200 hover:text-yellow-800 cursor-pointer"
-            >
-              Edit <Pen />
-            </Button>
-          </Link>
+              className="bg-red-100 text-red-700 hover:bg-red-200"
+              onClick={async () => {
+                const confirmDelete = confirm(`Bạn có chắc muốn xóa "${data.name}"?`)
 
-          <Button
-            size="sm"
-            className="bg-red-100 text-red-700 hover:bg-red-200"
-            onClick={async () => {
-              const confirmDelete = confirm(`Bạn có chắc muốn xóa "${data.name}"?`)
+                if (!confirmDelete) return
 
-              if (!confirmDelete) return
+                try {
+                  const res = await fetch(`/api/categories/${data.id}`, {
+                    method: "DELETE"
+                  })
 
-              try {
-                const res = await fetch(`/api/categories/${data.id}`, {
-                  method: "DELETE"
-                })
+                  const result = await res.json()
 
-                const result = await res.json()
+                  if (!res.ok) {
+                    toast.error(result.message)
+                    return
+                  }
 
-                if (!res.ok) {
-                  toast.error(result.message)
-                  return
+                  toast.success("Xóa thành công")
+                  router.refresh()
+                } catch (err) {
+                  toast.error("Có lỗi xảy ra")
                 }
-
-                toast.success("Xóa thành công")
-                // router.refresh()
-              } catch (err) {
-                toast.error("Có lỗi xảy ra")
-              }
-            }}
-          >
-            Delete <Trash2 />
-          </Button>
-        </div>
-      )
+              }}
+            >
+              Delete <Trash2 />
+            </Button>
+          </div>
+        )
+      },
     },
-  }
-]
+  ]
+}
 
 function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
   const { transform, transition, setNodeRef, isDragging } = useSortable({
@@ -303,6 +304,11 @@ export function DataTable({
 }: {
   data: z.infer<typeof schema>[]
 }) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const columns = useMemo(() => createColumns(router), [router])
+
   const [data, setData] = useState(() => initialData)
   useEffect(() => {
     setData(initialData)
@@ -364,10 +370,6 @@ export function DataTable({
     }
   }
 
-  // logic table
-  const router = useRouter()
-  const searchParams = useSearchParams()
-
   const sortField = searchParams.get("sortField") || 'created_at'
   const sortOrder = searchParams.get("sortOrder") || 'desc'
 
@@ -383,7 +385,6 @@ export function DataTable({
     router.push(`?${params.toString()}`)
   }
 
-  //render table
   return (
     <Tabs
       defaultValue="outline"
@@ -469,6 +470,12 @@ export function DataTable({
             <Button variant="outline" size="sm">
               <PlusIcon />
               <span className="hidden lg:inline">Add Category</span>
+            </Button>
+          </Link>
+          <Link href={"/admin/categories/trash"}>
+            <Button variant="outline" size="sm" className="bg-red-100 text-red-700 hover:bg-red-200">
+              <Trash2 />
+              <span className="hidden lg:inline">Trash</span>
             </Button>
           </Link>
         </div>

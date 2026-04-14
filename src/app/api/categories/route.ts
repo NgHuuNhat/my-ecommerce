@@ -1,23 +1,6 @@
-import { createCategory, getCategories } from "@/app/features/categories/model";
-import { categorySchema } from "@/app/features/categories/validation";
-import { NextRequest } from "next/server";
-
-// GET /api/categories
-// export async function GET() {
-//   try {
-//     const data = await getCategories();
-
-//     return Response.json({
-//       success: true,
-//       data,
-//     });
-//   } catch (error) {
-//     return Response.json(
-//       { success: false, message: "Failed to fetch categories" },
-//       { status: 500 }
-//     );
-//   }
-// }
+import { createCategory, getCategories } from "@/app/features/categories/model"
+import { categorySchema } from "@/app/features/categories/validation"
+import { NextRequest, NextResponse } from "next/server"
 
 // GET ALL
 export async function GET(req: NextRequest) {
@@ -25,63 +8,36 @@ export async function GET(req: NextRequest) {
     const keyword = req.nextUrl.searchParams.get("keyword") || ""
     const sortField = req.nextUrl.searchParams.get("sortField") || ""
     const sortOrderParam = req.nextUrl.searchParams.get("sortOrder")
+    const deleted = req.nextUrl.searchParams.get("deleted") === "true"
     const sortOrder: "asc" | "desc" =
       sortOrderParam === "asc" || sortOrderParam === "desc"
         ? sortOrderParam
-        : "desc" // default
+        : "desc"
 
-    const data = await getCategories(keyword, sortField, sortOrder)
+    // Get deleted categories if deleted=true
+    if (deleted) {
+      const data = await getCategories(keyword, "deleted_at", "desc", true)
+      return NextResponse.json({
+        success: true,
+        data,
+      })
+    }
 
-    return Response.json({
+    const data = await getCategories(keyword, sortField || "created_at", sortOrder)
+
+    return NextResponse.json({
       success: true,
       data,
     })
   } catch (error) {
-    // console.error("🔥 FIRESTORE ERROR:", error)
-    // throw error
-    return Response.json(
+    return NextResponse.json(
       { success: false, message: "Failed to fetch categories" },
       { status: 500 }
     )
   }
 }
 
-// // POST /api/categories
-// export async function POST(req: NextRequest) {
-//   try {
-//     const body = await req.json();
-
-//     const { name, slug, description } = body;
-
-//     // ✅ validate basic
-//     if (!name || !slug) {
-//       return Response.json(
-//         { success: false, message: "Name and slug are required" },
-//         { status: 400 }
-//       );
-//     }
-
-//     const docRef = await createCategory({
-//       name,
-//       slug,
-//       description: description || "",
-//     });
-
-//     return Response.json({
-//       success: true,
-//       data: {
-//         id: docRef.id,
-//       },
-//     });
-//   } catch (error) {
-//     return Response.json(
-//       { success: false, message: "Failed to create category" },
-//       { status: 500 }
-//     );
-//   }
-// }
-
-// POST
+// POST - CREATE NEW
 export async function POST(req: Request) {
   try {
     const body = await req.json()
@@ -89,7 +45,7 @@ export async function POST(req: Request) {
 
     if (!result.success) {
       const errors = result.error.flatten().fieldErrors
-      return Response.json(
+      return NextResponse.json(
         {
           error: Object.values(errors)[0]?.[0] || "Dữ liệu không hợp lệ"
         },
@@ -102,7 +58,7 @@ export async function POST(req: Request) {
     // check slug trùng
     const isExist = false // TODO: check DB
     if (isExist) {
-      return Response.json(
+      return NextResponse.json(
         { error: "Slug đã tồn tại" },
         { status: 400 }
       )
@@ -111,7 +67,7 @@ export async function POST(req: Request) {
     // TODO: save DB
     const docRef = await createCategory(data);
 
-    return Response.json({
+    return NextResponse.json({
       message: "Tạo category thành công",
       success: true,
       data: {
@@ -119,7 +75,7 @@ export async function POST(req: Request) {
       },
     })
   } catch (error) {
-    return Response.json(
+    return NextResponse.json(
       { error: "Server error" },
       { status: 500 }
     )

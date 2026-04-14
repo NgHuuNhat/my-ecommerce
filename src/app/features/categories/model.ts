@@ -11,12 +11,13 @@ import {
   where,
   startAt,
   endAt,
+  deleteDoc,
 } from "firebase/firestore";
 import { CategoryType } from "./type";
 
-const COLLECTION = "categories";
+const COLLECTION = "categories"
 
-// GET ALL (co search name)
+// // get all with search, sort
 // export const getCategories = async (
 //   keyword: string = '',
 //   sortField: string = 'created_at',
@@ -24,114 +25,116 @@ const COLLECTION = "categories";
 // ) => {
 //   const colRef = collection(db, COLLECTION)
 
-//   let q
-
 //   if (keyword) {
-//     const kw = keyword.trim().toLowerCase()
-//     q = query(
+//     const kw = keyword.trim()
+
+//     const docRef = doc(db, COLLECTION, kw)
+//     const docSnap = await getDoc(docRef)
+
+//     if (docSnap.exists()) {
+//       const item = {
+//         id: docSnap.id,
+//         ...(docSnap.data() as Omit<CategoryType, "id">),
+//       }
+
+//       if (!item.deleted_at) {
+//         return [item]
+//       }
+//       return []
+//     }
+
+//     const lowerKw = kw.toLowerCase()
+
+//     const q = query(
 //       colRef,
 //       orderBy("name_lowercase"),
-//       startAt(kw),
-//       endAt(kw + "\uf8ff")
+//       startAt(lowerKw),
+//       endAt(lowerKw + "\uf8ff")
 //     )
+
+//     const snapshot = await getDocs(q)
+
+//     return snapshot.docs
+//       .map((doc) => ({
+//         id: doc.id,
+//         ...(doc.data() as Omit<CategoryType, "id">),
+//       }))
+//       .filter((item) => !item.deleted_at)
+//   }
+
+//   let q
+
+//   if (sortField && sortOrder) {
+//     q = query(colRef, orderBy(sortField, sortOrder))
 //   } else {
-//     if (sortField && sortOrder) {
-//       q = query(
-//         colRef,
-//         orderBy(sortField, sortOrder))
-//     } else {
-//       q = query(
-//         colRef,
-//         orderBy("created_at", "desc"))
-//     }
+//     q = query(colRef, orderBy("created_at", "desc"))
 //   }
 
 //   const snapshot = await getDocs(q)
-//   const data: CategoryType[] = snapshot.docs
+
+//   return snapshot.docs
 //     .map((doc) => ({
 //       id: doc.id,
 //       ...(doc.data() as Omit<CategoryType, "id">),
 //     }))
 //     .filter((item) => !item.deleted_at)
-//   return data
 // }
 
-// GET ALL (co search id-name)
+//get all
+
+const FIRESTORE_SEARCH_SUFFIX = "\uf8ff"
+
+const createCategoryItem = (doc: any): CategoryType => ({
+  id: doc.id,
+  ...(doc.data() as Omit<CategoryType, "id">),
+})
+
+const isActive = (item: CategoryType): boolean => !item.deleted_at
+
+const isDeleted = (item: CategoryType): boolean => !!item.deleted_at
+
 export const getCategories = async (
   keyword: string = '',
   sortField: string = 'created_at',
   sortOrder: "asc" | "desc" = "desc",
-) => {
+  showDeleted: boolean = false,
+): Promise<CategoryType[]> => {
   const colRef = collection(db, COLLECTION)
+  const filterFunc = showDeleted ? isDeleted : isActive
 
-  // 🔥 1. Nếu có keyword → check ID trước
   if (keyword) {
-    const kw = keyword.trim()
+    const trimmed = keyword.trim()
 
-    // 👉 tìm theo ID (exact match)
-    const docRef = doc(db, COLLECTION, kw)
-    const docSnap = await getDoc(docRef)
-
+    const docSnap = await getDoc(doc(db, COLLECTION, trimmed))
     if (docSnap.exists()) {
-      const item = {
-        id: docSnap.id,
-        ...(docSnap.data() as Omit<CategoryType, "id">),
-      }
-
-      // 👉 filter deleted
-      if (!item.deleted_at) {
-        return [item]
-      }
-      return []
+      const item = createCategoryItem(docSnap)
+      return filterFunc(item) ? [item] : []
     }
 
-    // 👉 nếu không phải ID → search name
-    const lowerKw = kw.toLowerCase()
-
+    const lower = trimmed.toLowerCase()
     const q = query(
       colRef,
       orderBy("name_lowercase"),
-      startAt(lowerKw),
-      endAt(lowerKw + "\uf8ff")
+      startAt(lower),
+      endAt(lower + FIRESTORE_SEARCH_SUFFIX)
     )
-
     const snapshot = await getDocs(q)
-
-    return snapshot.docs
-      .map((doc) => ({
-        id: doc.id,
-        ...(doc.data() as Omit<CategoryType, "id">),
-      }))
-      .filter((item) => !item.deleted_at)
+    return snapshot.docs.map(createCategoryItem).filter(filterFunc)
   }
 
-  // 🔥 2. Không có keyword → sort bình thường
-  let q
-
-  if (sortField && sortOrder) {
-    q = query(colRef, orderBy(sortField, sortOrder))
-  } else {
-    q = query(colRef, orderBy("created_at", "desc"))
-  }
-
+  const q = query(colRef, orderBy(sortField, sortOrder))
   const snapshot = await getDocs(q)
-
-  return snapshot.docs
-    .map((doc) => ({
-      id: doc.id,
-      ...(doc.data() as Omit<CategoryType, "id">),
-    }))
-    .filter((item) => !item.deleted_at)
+  return snapshot.docs.map(createCategoryItem).filter(filterFunc)
 }
 
 // GET ONE
-export const getCategoryById = async (id: string) => {
+export const getCategoryById = async (id: string): Promise<CategoryType | null> => {
   const ref = doc(db, COLLECTION, id);
   const snapshot = await getDoc(ref);
 
   if (!snapshot.exists()) return null;
 
-  return { id: snapshot.id, ...snapshot.data() };
+  return createCategoryItem(snapshot);
 };
 
 // CREATE
@@ -160,9 +163,24 @@ export const updateCategory = async (id: string, data: any) => {
 
 // SOFT DELETE
 export const deleteCategory = async (id: string) => {
-  const ref = doc(db, COLLECTION, id);
+  const ref = doc(db, COLLECTION, id)
 
   return await updateDoc(ref, {
     deleted_at: new Date().toISOString(),
-  });
-};
+  })
+}
+
+// RESTORE FROM TRASH
+export const restoreCategory = async (id: string) => {
+  const ref = doc(db, COLLECTION, id)
+
+  return await updateDoc(ref, {
+    deleted_at: null,
+  })
+}
+
+// PERMANENT DELETE
+export const deleteForever = async (id: string) => {
+  const ref = doc(db, COLLECTION, id)
+  return await deleteDoc(ref)
+}

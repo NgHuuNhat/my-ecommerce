@@ -1,6 +1,5 @@
 import React from 'react'
 import { DataTable } from './table'
-// import data from "./data.json"
 
 interface IProps {
     params: {},
@@ -13,7 +12,6 @@ interface IProps {
 
 export default async function CategoriesPage({ searchParams }: IProps) {
     const { keyword = '', sortField = 'created_at', sortOrder = 'desc' } = await searchParams
-    console.log("-------------------searchParams", keyword, sortField, sortOrder)
 
     const params = new URLSearchParams()
     if (keyword) params.set("keyword", keyword)
