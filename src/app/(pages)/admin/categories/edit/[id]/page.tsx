@@ -5,11 +5,10 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import FormSubmitCategory, { CategoryFormValues } from '../../form-submit'
-import { Button } from '@/components/ui/button'
 
 export default function EditCategoryPage() {
     const router = useRouter()
-    const params = useParams() // 👈 dùng cái này
+    const params = useParams()
     const id = params.id as string
 
     const [loading, setLoading] = useState(true)
@@ -23,9 +22,6 @@ export default function EditCategoryPage() {
                 const res = await fetch(`/api/categories/${id}`)
                 const result = await res.json()
 
-                // const text = await res.text() // 👈 đổi qua text trước
-                // console.log("raw:", text)
-
                 if (!res.ok) {
                     toast.error(result.message)
                     return
@@ -33,7 +29,6 @@ export default function EditCategoryPage() {
 
                 setData(result.data)
             } catch (err) {
-                console.error("ERROR:", err) // 👈 thêm cái này
                 toast.error("Lỗi load data")
             } finally {
                 setLoading(false)
@@ -41,7 +36,7 @@ export default function EditCategoryPage() {
         }
 
         fetchData()
-    }, [id]) // ✅ OK
+    }, [id])
 
     const onSubmit = async (formData: CategoryFormValues) => {
         try {
@@ -69,14 +64,13 @@ export default function EditCategoryPage() {
         }
     }
 
-    if (loading) return (
-        <div className="px-4 md:px-6">
-            {/* <Button variant="secondary" disabled> */}
+    if (loading) {
+        return (
+            <div className="px-4 md:px-6">
                 loading...
-                {/* <Spinner data-icon="inline-start" /> */}
-            {/* </Button> */}
-        </div>
-    )
+            </div>
+        )
+    }
 
     return (
         <div className="px-4 md:px-6">

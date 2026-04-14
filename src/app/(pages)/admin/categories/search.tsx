@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+import { useCallback, useEffect, useMemo, useState, type ChangeEvent, type ComponentProps } from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
@@ -11,7 +11,7 @@ import { SearchIcon, X } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { debounce } from "lodash"
 
-function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
+function InputGroup({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       data-slot="input-group"
@@ -50,7 +50,7 @@ function InputGroupAddon({
   className,
   align = "inline-start",
   ...props
-}: React.ComponentProps<"div"> & VariantProps<typeof inputGroupAddonVariants>) {
+}: ComponentProps<"div"> & VariantProps<typeof inputGroupAddonVariants>) {
   return (
     <div
       role="group"
@@ -92,7 +92,7 @@ function InputGroupButton({
   variant = "ghost",
   size = "xs",
   ...props
-}: Omit<React.ComponentProps<typeof Button>, "size"> &
+}: Omit<ComponentProps<typeof Button>, "size"> &
   VariantProps<typeof inputGroupButtonVariants>) {
   return (
     <Button
@@ -105,7 +105,7 @@ function InputGroupButton({
   )
 }
 
-function InputGroupText({ className, ...props }: React.ComponentProps<"span">) {
+function InputGroupText({ className, ...props }: ComponentProps<"span">) {
   return (
     <span
       className={cn(
@@ -120,7 +120,7 @@ function InputGroupText({ className, ...props }: React.ComponentProps<"span">) {
 function InputGroupInput({
   className,
   ...props
-}: React.ComponentProps<"input">) {
+}: ComponentProps<"input">) {
   return (
     <Input
       data-slot="input-group-control"
@@ -136,7 +136,7 @@ function InputGroupInput({
 function InputGroupTextarea({
   className,
   ...props
-}: React.ComponentProps<"textarea">) {
+}: ComponentProps<"textarea">) {
   return (
     <Textarea
       data-slot="input-group-control"
@@ -151,93 +151,80 @@ function InputGroupTextarea({
 
 export default function SearchPage() {
   const searchParams = useSearchParams()
-  const [keyword, setKeyword] = React.useState<string | undefined>(searchParams.get('keyword') || "")
-  const pathName = usePathname()
+  const pathname = usePathname()
   const router = useRouter()
 
-  // const onSubmitSearch = () => {
-  //   const params = new URLSearchParams(searchParams)
-  //   if (keyword) {
-  //     params.set('keyword', keyword)
-  //   } else {
-  //     params.delete('keyword')
-  //   }
+  const [keyword, setKeyword] = useState(() => searchParams.get("keyword") ?? "")
 
-  //   replace(`${pathName}?${params.toString()}`)
-  // }
+  useEffect(() => {
+    setKeyword(searchParams.get("keyword") ?? "")
+  }, [searchParams])
 
-  const debouncedSearch = React.useMemo(
-    () =>
-      debounce((value: string) => {
-        const params = new URLSearchParams(searchParams)
+  const updateSearchQuery = useCallback(
+    (value: string) => {
+      const params = new URLSearchParams(searchParams)
 
-        if (value) params.set('keyword', value)
-        else params.delete('keyword')
+      if (value) params.set("keyword", value)
+      else params.delete("keyword")
 
-        router.replace(`${pathName}?${params.toString()}`)
-      }, 100),
-    []
+      const query = params.toString()
+      router.replace(`${pathname}${query ? `?${query}` : ""}`)
+    },
+    [pathname, router, searchParams]
   )
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value)
-    debouncedSearch(e.target.value)
-  }
+  const debouncedSearch = useMemo(() => debounce(updateSearchQuery, 100), [updateSearchQuery])
+
+  useEffect(() => () => debouncedSearch.cancel(), [debouncedSearch])
+
+  const handleChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const nextValue = event.target.value
+      setKeyword(nextValue)
+      debouncedSearch(nextValue)
+    },
+    [debouncedSearch]
+  )
+
+  const handleClear = useCallback(() => {
+    setKeyword("")
+    debouncedSearch.cancel()
+    updateSearchQuery("")
+  }, [debouncedSearch, updateSearchQuery])
+
+  const hasKeyword = keyword.length > 0
 
   return (
-    <div className='search-page px-4 lg:px-6'>
-      {/* <InputGroup className="outline-none focus:outline-none focus-visible:ring-0 focus:ring-0"> */}
+    <div className="search-page px-4 lg:px-6">
       <InputGroup
-        // className="!ring-0 !ring-transparent !border-input"
         className={cn(
           "!ring-0 !ring-transparent",
-          keyword
-            ? "!border-blue-500 focus-within:!border-blue-500"
-            : "!border-input"
+          hasKeyword ? "!border-blue-500 focus-within:!border-blue-500" : "!border-input"
         )}
       >
-
         <InputGroupInput
           value={keyword}
           onChange={handleChange}
-          // placeholder="Search..."
           placeholder="Search by Name or ID..."
           className="text-blue-500"
-        // onKeyDown={(e) => {
-        //   if (e.key === 'Enter') {
-        //     onSubmitSearch()
-        //   }
-        // }}
         />
 
-        {/* Clear button */}
-        {keyword && (
+        {hasKeyword && (
           <InputGroupAddon align="inline-end">
-            <InputGroupButton
-              onClick={() => {
-                setKeyword("")
-                debouncedSearch.cancel() // 🚨 tránh call cũ
-
-                const params = new URLSearchParams(searchParams)
-                params.delete("keyword")
-                router.replace(`${pathName}?${params.toString()}`)
-              }}
-            >
+            <InputGroupButton onClick={handleClear}>
               <X className="text-blue-500" />
             </InputGroupButton>
           </InputGroupAddon>
         )}
 
-        {/* Search icon */}
         <InputGroupAddon>
           <SearchIcon
             className={cn(
               "transition-colors",
-              // keyword ? "text-foreground" : "text-muted-foreground"
-              keyword ? "text-blue-500" : "text-muted-foreground"
-            )} />
+              hasKeyword ? "text-blue-500" : "text-muted-foreground"
+            )}
+          />
         </InputGroupAddon>
-
       </InputGroup>
     </div>
   )
