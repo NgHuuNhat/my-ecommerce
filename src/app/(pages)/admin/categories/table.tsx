@@ -613,7 +613,7 @@ export function DataTable({
       <SearchPage />
 
       {/* sort-page */}
-      <div className="flex items-center justify-between px-4 lg:px-6">
+      <div className="flex flex-wrap items-center justify-between px-4 lg:px-6 gap-2">
 
         <div className="flex gap-2">
           <Select
@@ -639,19 +639,21 @@ export function DataTable({
 
           <div defaultValue="desc" className="button-sort flex gap-2">
             <Button
+              // size="icon"
               onClick={() => updateParams("sortOrder", "desc")}
               variant={sortOrder === "desc" ? "default" : "outline"}
               value="desc" className="giam-dan" aria-label="Submit">
               Mới nhất
-              {/* <ArrowDownIcon /> */}
+              <ArrowDownIcon />
             </Button>
 
             <Button
+              // size="icon"
               onClick={() => updateParams("sortOrder", "asc")}
               variant={sortOrder === "asc" ? "default" : "outline"}
               value="asc" className="tang-dan" aria-label="Submit">
               Cũ nhất
-              {/* <ArrowUpIcon /> */}
+              <ArrowUpIcon />
             </Button>
           </div>
 

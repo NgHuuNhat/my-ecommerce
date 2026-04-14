@@ -1,11 +1,6 @@
 'use client'
 
-import { categorySchema } from '@/app/features/categories/validation'
-
-import { zodResolver } from '@hookform/resolvers/zod'
-import {  useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
-import z from 'zod'
 import { toast } from 'sonner'
 import FormSubmitCategory, { CategoryFormValues } from '../form-submit'
 
