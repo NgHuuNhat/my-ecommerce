@@ -142,9 +142,9 @@ export default function TrashPage() {
                         <h1 className="text-2xl font-semibold">Trash</h1>
                         <p className="text-sm text-muted-foreground">Manage soft-deleted categories and restore or permanently delete items.</p>
                     </div>
-                    {/* <Link href="/admin/categories">
-                        <Button variant="outline">← Back</Button>
-                    </Link> */}
+                    <Link href="/admin/categories">
+                        <Button variant="outline">←</Button>
+                    </Link>
                 </div>
 
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -203,8 +203,8 @@ export default function TrashPage() {
                                         <div className="flex gap-2">
                                             <Button
                                                 size="sm"
-                                                variant="outline"
                                                 onClick={() => handleRestore(item.id, item.name)}
+                                                className=' bg-green-100 hover:bg-green-200 text-green-700 hover:text-green-900'
                                             >
                                                 <RotateCcw className="size-4" />
                                                 <span className="hidden sm:inline">Restore</span>
@@ -217,7 +217,7 @@ export default function TrashPage() {
                                                 }
                                             >
                                                 <Trash2 className="size-4" />
-                                                <span className="hidden sm:inline">Delete</span>
+                                                <span className="hidden sm:inline">Delete forever</span>
                                             </Button>
                                         </div>
                                     </TableCell>

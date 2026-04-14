@@ -30,6 +30,7 @@ export interface FormSubmitProps {
 }
 
 export default function FormSubmitCategory({ data, onSubmit }: FormSubmitProps) {
+    const isEdit = !!data
     const form = useForm<CategoryFormValues>({
         resolver: zodResolver(categorySchema),
         defaultValues: {
@@ -150,11 +151,20 @@ export default function FormSubmitCategory({ data, onSubmit }: FormSubmitProps) 
                 </FieldGroup>
 
                 {/* SUBMIT */}
-                <Button
+                {/* <Button
                     type="submit"
                     className='cursor-pointer'
                 >
                     Submit
+                </Button> */}
+                <Button
+                    type="submit"
+                    className={`cursor-pointer ${isEdit
+                        ? "bg-yellow-200 hover:bg-yellow-300 text-yellow-700 hover:text-yellow-900"
+                        : "bg-blue-200 hover:bg-blue-300 text-blue-700 hover:text-blue-900"
+                        }`}
+                >
+                    {isEdit ? "Update" : "Create"}
                 </Button>
             </form>
         </div>

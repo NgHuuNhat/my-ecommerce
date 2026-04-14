@@ -239,7 +239,7 @@ function createColumns(router: ReturnType<typeof useRouter>): ColumnDef<z.infer<
 
             <Button
               size="sm"
-              className="bg-red-100 text-red-700 hover:bg-red-200"
+              className="bg-red-100 text-red-700 hover:bg-red-200 cursor-pointer"
               onClick={async () => {
                 const confirmDelete = confirm(`Bạn có chắc muốn xóa "${data.name}"?`)
 
@@ -467,15 +467,16 @@ export function DataTable({
             </DropdownMenuContent>
           </DropdownMenu>
           <Link href={"/admin/categories/new"}>
-            <Button variant="outline" size="sm" className="bg-green-100 text-green-700 hover:bg-green-200 hover:text-green-800">
+            <Button size="sm" variant="outline" className="bg-blue-100 hover:bg-blue-200 text-blue-500 hover:text-blue-700">
               <PlusIcon />
-              <span className="hidden lg:inline">Add Category</span>
+              <span className="hidden lg:inline ">Add Category</span>
             </Button>
           </Link>
+
           <Link href={"/admin/categories/trash"}>
-            <Button variant="outline" size="sm" className="bg-red-100 text-red-700 hover:bg-red-200 hover:text-red-800">
+            <Button size="sm" variant="outline" className="bg-red-100 hover:bg-red-200 text-red-500 hover:text-red-700">
               <Trash2 />
-              <span className="hidden lg:inline">Trash</span>
+              <span className="hidden lg:inline">Trash Category</span>
             </Button>
           </Link>
         </div>

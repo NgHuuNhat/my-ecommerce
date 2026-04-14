@@ -3,6 +3,8 @@
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import FormSubmitCategory, { CategoryFormValues } from '../form-submit'
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
 
 export default function NewCategoryPage() {
     const router = useRouter()
@@ -32,7 +34,12 @@ export default function NewCategoryPage() {
 
     return (
         <div className='new-categories-page px-4 md:px-6'>
-            <h6 className='mb-5'>Create Category</h6>
+            <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
+                <h6 className="mb-5">Create Category</h6>
+                <Link href="/admin/categories">
+                    <Button variant="outline">←</Button>
+                </Link>
+            </div>
             <FormSubmitCategory onSubmit={onSubmit} />
         </div>
     )
