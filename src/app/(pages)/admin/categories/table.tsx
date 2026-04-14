@@ -467,13 +467,13 @@ export function DataTable({
             </DropdownMenuContent>
           </DropdownMenu>
           <Link href={"/admin/categories/new"}>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="bg-green-100 text-green-700 hover:bg-green-200 hover:text-green-800">
               <PlusIcon />
               <span className="hidden lg:inline">Add Category</span>
             </Button>
           </Link>
           <Link href={"/admin/categories/trash"}>
-            <Button variant="outline" size="sm" className="bg-red-100 text-red-700 hover:bg-red-200">
+            <Button variant="outline" size="sm" className="bg-red-100 text-red-700 hover:bg-red-200 hover:text-red-800">
               <Trash2 />
               <span className="hidden lg:inline">Trash</span>
             </Button>

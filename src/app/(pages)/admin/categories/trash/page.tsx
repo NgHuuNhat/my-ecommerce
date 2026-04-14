@@ -129,7 +129,7 @@ export default function TrashPage() {
         return (
             <div className="px-4 md:px-6">
                 <h1 className="mb-5 text-2xl font-bold">Trash</h1>
-                <div>Loading...</div>
+                <div>loading...</div>
             </div>
         )
     }
@@ -204,7 +204,6 @@ export default function TrashPage() {
                                             <Button
                                                 size="sm"
                                                 variant="outline"
-                                                className="bg-green-50 text-green-700 hover:bg-green-100"
                                                 onClick={() => handleRestore(item.id, item.name)}
                                             >
                                                 <RotateCcw className="size-4" />
