@@ -3,28 +3,28 @@ import { NextRequest } from "next/server";
 
 // GET ONE /api/categories/:id
 export async function GET(
-  req: NextRequest,
-  context: { params: Promise<{ id: string }> }
+    req: NextRequest,
+    context: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const { id } = await context.params
+    try {
+        const { id } = await context.params
 
-    const data = await getCategoryById(id)
+        const data = await getCategoryById(id)
 
-    if (!data) {
-      return Response.json(
-        { message: "Category not found" },
-        { status: 404 }
-      )
+        if (!data) {
+            return Response.json(
+                { message: "Category not found" },
+                { status: 404 }
+            )
+        }
+
+        return Response.json({ data })
+    } catch (error) {
+        return Response.json(
+            { message: "Failed to fetch category" },
+            { status: 500 }
+        )
     }
-
-    return Response.json({ data })
-  } catch (error) {
-    return Response.json(
-      { message: "Failed to fetch category" },
-      { status: 500 }
-    )
-  }
 }
 
 // PATCH /api/categories/:id
@@ -76,6 +76,7 @@ export async function DELETE(
 
         return Response.json({
             success: true,
+            message: "Xoa thanh cong!"
         });
     } catch (error) {
         return Response.json(

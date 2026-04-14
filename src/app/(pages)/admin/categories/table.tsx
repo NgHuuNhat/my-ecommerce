@@ -448,11 +448,45 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
           </Link>
 
           {/* Delete */}
-          <Button
+          {/* <Button
             size="sm"
             className="bg-red-100 text-red-700 hover:bg-red-200 hover:text-red-800 cursor-pointer"
             onClick={() => {
               console.log("Delete", data)
+            }}
+          >
+            Delete <Trash2 />
+          </Button> */}
+          <Button
+            size="sm"
+            className="bg-red-100 text-red-700 hover:bg-red-200"
+            onClick={async () => {
+              console.log("Delete", data)
+              const confirmDelete = confirm("Bạn có chắc muốn xóa?")
+
+              if (!confirmDelete) return
+
+              try {
+                const res = await fetch(`/api/categories/${data.id}`, {
+                  method: "DELETE"
+                })
+
+                const result = await res.json()
+
+                if (!res.ok) {
+                  toast.error(result.message)
+                  return
+                }
+
+                toast.success("Xóa thành công")
+
+                // 👇 reload lại data
+                // router.refresh()
+                window.location.reload()
+
+              } catch (err) {
+                toast.error("Có lỗi xảy ra")
+              }
             }}
           >
             Delete <Trash2 />

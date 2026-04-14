@@ -26,7 +26,7 @@ export const getCategories = async (
   let q
 
   if (keyword) {
-    const kw = keyword.trim().toLowerCase() 
+    const kw = keyword.trim().toLowerCase()
     q = query(
       colRef,
       orderBy("name_lowercase"),
@@ -80,9 +80,11 @@ export const createCategory = async (data: any) => {
 // UPDATE
 export const updateCategory = async (id: string, data: any) => {
   const ref = doc(db, COLLECTION, id);
+  const name = data.name
 
   return await updateDoc(ref, {
     ...data,
+    name_lowercase: name.toLowerCase(),
     updated_at: new Date().toISOString(),
   });
 };
