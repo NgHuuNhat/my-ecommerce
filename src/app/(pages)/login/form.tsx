@@ -18,6 +18,7 @@ import z from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { formSchema } from "@/app/features/login/validation"
+import Link from "next/link"
 
 type FormValues = z.infer<typeof formSchema>
 type LoginFormProps = React.ComponentProps<"div"> & {
@@ -51,7 +52,7 @@ export function FormLoginCustom({ className, onLogin, ...props }: LoginFormProps
           <form onSubmit={form.handleSubmit(handleSubmit)}>
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <FieldLabel htmlFor="email">Email (nhat@nhat.com)</FieldLabel>
                 <Input
                   id="email"
                   type="email"
@@ -67,7 +68,7 @@ export function FormLoginCustom({ className, onLogin, ...props }: LoginFormProps
               </Field>
               <Field>
                 <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
+                  <FieldLabel htmlFor="password">Password (123)</FieldLabel>
                   <a
                     href="#"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
@@ -87,6 +88,11 @@ export function FormLoginCustom({ className, onLogin, ...props }: LoginFormProps
                 <Button variant="outline" type="button">
                   Login with Google
                 </Button>
+                <Link href='/'>
+                  <Button variant="outline" type="button">
+                    Click Home Page!
+                  </Button>
+                </Link>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account? <a href="#">Sign up</a>
                 </FieldDescription>
