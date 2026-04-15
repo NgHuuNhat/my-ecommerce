@@ -1,11 +1,19 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
-import { DatabaseIcon } from "lucide-react"
+import { DatabaseIcon, Home, HomeIcon } from "lucide-react"
 
 export default function AdminLayout({ children }: any) {
     const data: any = {
         documents: [
+            {
+                name: "home page",
+                url: "/",
+                icon: (
+                    <HomeIcon
+                    />
+                ),
+            },
             {
                 name: "admin",
                 url: "/admin",
