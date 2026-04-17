@@ -30,6 +30,14 @@ export default function AdminLayout({ children }: any) {
                     />
                 ),
             },
+            {
+                name: "users",
+                url: "/admin/users",
+                icon: (
+                    <DatabaseIcon
+                    />
+                ),
+            },
         ],
     }
 
@@ -42,17 +50,21 @@ export default function AdminLayout({ children }: any) {
                 } as React.CSSProperties
             }
         >
+            {/* side bar */}
             <AppSidebar variant="inset" data={data} />
+
             <SidebarInset>
                 <SiteHeader />
                 <div className="flex flex-1 flex-col">
                     <div className="@container/main flex flex-1 flex-col gap-2">
                         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+                            {/* content */}
                             {children}
                         </div>
                     </div>
                 </div>
             </SidebarInset>
+
         </SidebarProvider>
     )
 }

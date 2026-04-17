@@ -16,6 +16,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { LayoutDashboardIcon, ListIcon, ChartBarIcon, FolderIcon, UsersIcon, CameraIcon, FileTextIcon, Settings2Icon, CircleHelpIcon, SearchIcon, DatabaseIcon, FileChartColumnIcon, FileIcon, CommandIcon } from "lucide-react"
+import { usePathname } from "next/navigation"
 
 const defaultData = {
   user: {
@@ -185,7 +186,7 @@ export function AppSidebar({ data: dataProp, ...props }: AppSidebarProps) {
     ...defaultData,
     ...dataProp,
   }
-
+  
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -205,7 +206,10 @@ export function AppSidebar({ data: dataProp, ...props }: AppSidebarProps) {
       </SidebarHeader>
       <SidebarContent>
         {/* <NavMain items={data.navMain} /> */}
+
+        {/* side bar */}
         <NavDocuments items={data.documents} />
+        
         {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
       <SidebarFooter>

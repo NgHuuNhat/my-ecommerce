@@ -17,80 +17,13 @@ import { CategoryType } from "./type";
 
 const COLLECTION = "categories"
 
-// // get all with search, sort
-// export const getCategories = async (
-//   keyword: string = '',
-//   sortField: string = 'created_at',
-//   sortOrder: "asc" | "desc" = "desc",
-// ) => {
-//   const colRef = collection(db, COLLECTION)
-
-//   if (keyword) {
-//     const kw = keyword.trim()
-
-//     const docRef = doc(db, COLLECTION, kw)
-//     const docSnap = await getDoc(docRef)
-
-//     if (docSnap.exists()) {
-//       const item = {
-//         id: docSnap.id,
-//         ...(docSnap.data() as Omit<CategoryType, "id">),
-//       }
-
-//       if (!item.deleted_at) {
-//         return [item]
-//       }
-//       return []
-//     }
-
-//     const lowerKw = kw.toLowerCase()
-
-//     const q = query(
-//       colRef,
-//       orderBy("name_lowercase"),
-//       startAt(lowerKw),
-//       endAt(lowerKw + "\uf8ff")
-//     )
-
-//     const snapshot = await getDocs(q)
-
-//     return snapshot.docs
-//       .map((doc) => ({
-//         id: doc.id,
-//         ...(doc.data() as Omit<CategoryType, "id">),
-//       }))
-//       .filter((item) => !item.deleted_at)
-//   }
-
-//   let q
-
-//   if (sortField && sortOrder) {
-//     q = query(colRef, orderBy(sortField, sortOrder))
-//   } else {
-//     q = query(colRef, orderBy("created_at", "desc"))
-//   }
-
-//   const snapshot = await getDocs(q)
-
-//   return snapshot.docs
-//     .map((doc) => ({
-//       id: doc.id,
-//       ...(doc.data() as Omit<CategoryType, "id">),
-//     }))
-//     .filter((item) => !item.deleted_at)
-// }
-
 //get all
-
 const FIRESTORE_SEARCH_SUFFIX = "\uf8ff"
-
 const createCategoryItem = (doc: any): CategoryType => ({
   id: doc.id,
   ...(doc.data() as Omit<CategoryType, "id">),
 })
-
 const isActive = (item: CategoryType): boolean => !item.deleted_at
-
 const isDeleted = (item: CategoryType): boolean => !!item.deleted_at
 
 export const getCategories = async (
