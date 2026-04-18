@@ -478,12 +478,12 @@ export function DataTable({
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* <Link href={"/admin/users/new"}>
+          <Link href={"/admin/users/new"}>
             <Button size="sm" variant="outline" className="bg-blue-100 hover:bg-blue-200 text-blue-500 hover:text-blue-700">
               <PlusIcon />
               <span className="hidden lg:inline ">Add User</span>
             </Button>
-          </Link> */}
+          </Link>
 
           {/* <Link href={"/admin/users/trash"}>
             <Button size="sm" variant="outline" className="bg-red-100 hover:bg-red-200 text-red-500 hover:text-red-700">
