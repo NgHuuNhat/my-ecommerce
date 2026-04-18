@@ -1,3 +1,4 @@
+//user type
 export interface UserType {
   id: string
   email: string
@@ -10,4 +11,26 @@ export interface UserType {
   deleted_at: string | null
 }
 
-export interface CreateUserType extends Pick<UserType, 'email' | 'password' | 'role'> { }
+//create type
+export interface CreateUserType {
+  email: string
+  password: string
+  role?: "admin" | "user"
+}
+
+//search type + sort type
+export type UserQuery = {
+  keyword?: string
+  sortField?: string
+  sortOrder?: "asc" | "desc"
+  deleted?: boolean
+}
+
+//search default type + sort default type
+export const defaultUserQuery = (params: UserQuery = {}) => ({
+  keyword: "",
+  sortField: "created_at",
+  sortOrder: "desc",
+  deleted: false,
+  ...params,
+})

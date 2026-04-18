@@ -243,7 +243,7 @@ function createColumns(router: ReturnType<typeof useRouter>): ColumnDef<z.infer<
         return (
           <div className="flex items-center gap-2">
             <Link
-              //  href={`/admin/users/edit/${data.id}`}
+              // href={`/admin/users/edit/${data.id}`}
               href='#'
             >
               <Button
@@ -416,7 +416,7 @@ export function DataTable({
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Sort</SelectLabel>
-                <SelectItem value="email_lowercase">Email</SelectItem>
+                <SelectItem value="email">Email</SelectItem>
                 <SelectItem value="created_at">Created At</SelectItem>
               </SelectGroup>
             </SelectContent>

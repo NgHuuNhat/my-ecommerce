@@ -153,7 +153,6 @@ export default function SearchPage() {
   const searchParams = useSearchParams()
   const pathname = usePathname()
   const router = useRouter()
-
   const [keyword, setKeyword] = useState(() => searchParams.get("keyword") ?? "")
 
   useEffect(() => {
@@ -163,10 +162,8 @@ export default function SearchPage() {
   const updateSearchQuery = useCallback(
     (value: string) => {
       const params = new URLSearchParams(searchParams)
-
       if (value) params.set("keyword", value)
       else params.delete("keyword")
-
       const query = params.toString()
       router.replace(`${pathname}${query ? `?${query}` : ""}`)
     },
@@ -174,7 +171,6 @@ export default function SearchPage() {
   )
 
   const debouncedSearch = useMemo(() => debounce(updateSearchQuery, 100), [updateSearchQuery])
-
   useEffect(() => () => debouncedSearch.cancel(), [debouncedSearch])
 
   const handleChange = useCallback(
