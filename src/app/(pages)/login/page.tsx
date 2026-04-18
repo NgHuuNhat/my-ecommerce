@@ -1,20 +1,21 @@
 'use client'
 
 import { CreateAdminType } from "@/app/features/admin/type"
-import { signIn } from "next-auth/react"
+import { getSession, signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { FormLoginCustom } from "./form"
+import { CreateUserType } from "@/app/features/users/type"
+import { LoginType } from "@/app/features/login/type"
 
 export default function Page() {
   const router = useRouter()
 
-  const onLogin = async (data: CreateAdminType) => {
+  const onLogin = async (data: LoginType) => {
     const res = await signIn("credentials", {
       email: data.email,
       password: data.password,
       redirect: false,
-      callbackUrl: "/admin"
     })
 
     if (res?.error) {
@@ -23,7 +24,17 @@ export default function Page() {
     }
 
     toast.success("Login thanh cong")
-    router.push("/admin")
+
+    // lấy session để check role
+    const session = await getSession()
+    const role = (session?.user as any)?.role
+
+    // redirect theo role
+    if (role === "admin") {
+      router.push("/admin")
+    } else {
+      router.push("/")
+    }
   }
 
   return (

@@ -11,17 +11,23 @@ export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   console.log(`>>> Path: ${pathname} | Login: ${!!token}`);
 
-  // ✅ 1. Chưa login mà vào /admin → redirect login
+  // ❌ chưa login → vào admin thì đá login
   if (!token && pathname.startsWith("/admin")) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    return NextResponse.redirect(new URL("/login", req.url))
   }
 
-  // ✅ 2. Đã login mà vào /login → redirect admin
+  // ❌ user thường vào /admin → đá về home
+  if (pathname.startsWith("/admin") && token?.role !== "admin") {
+    return NextResponse.redirect(new URL("/", req.url))
+  }
+
+  // (optional) nếu muốn user không vào login nữa khi đã login
   if (token && pathname.startsWith("/login")) {
-    return NextResponse.redirect(new URL("/admin", req.url));
+    if (token?.role === "admin") {
+      return NextResponse.redirect(new URL("/admin", req.url))
+    }
+    return NextResponse.redirect(new URL("/", req.url))
   }
-
-
 
   return NextResponse.next();
 }

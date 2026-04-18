@@ -1,163 +1,70 @@
 import { db } from "@/app/services/firebase"
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  addDoc,
-  updateDoc,
-  query,
-  where,
-  orderBy,
-  startAt,
-  endAt,
-} from "firebase/firestore"
+import { addDoc, collection, getDoc, getDocs, orderBy, query, Timestamp, where } from "firebase/firestore"
+import { CreateUserType, UserType } from "./type"
+import { hashPassword } from "../login/password"
 
-// ================= TYPE =================
-export type UserType = {
-  id: string
-  email: string
-  email_lowercase: string
-  password: string
-  role: "admin" | "user"
-  isActive: boolean
-  created_at: string
-  updated_at: string
-  deleted_at: string | null
+// CREATE USER
+const COLLECTION = "users"
+const userRef = collection(db, COLLECTION)
+
+export const findUserByEmail = async (email: string): Promise<UserType> => {
+  const exitedUser = await getDocs(query(userRef, where('email', '==', email)))
+  const user = exitedUser.docs[0].data() as UserType
+  return {
+    ...user,
+    id: exitedUser.docs[0].id,
+    role: exitedUser.docs[0].data().role
+  }
 }
 
-// ================= COLLECTION =================
-const col = collection(db, "users")
-
-// ================= CREATE =================
-export async function createUser(data: Omit<UserType, "id">) {
-  const docRef = await addDoc(col, data)
-  return docRef.id
+export const isUserEmailExists = async (email: string): Promise<boolean> => {
+  const exitedEmail = await getDocs(
+    query(userRef, where("email", "==", email))
+  )
+  return !exitedEmail.empty
 }
 
-// ================= GET ALL =================
-// export async function getUsers(
-//   keyword: string = "",
-//   sortField: keyof UserType = "created_at",
-//   sortOrder: "asc" | "desc" = "desc",
-//   isDeleted: boolean = false
-// ) {
-//   let q = query(col)
-
-//   // filter deleted
-//   q = query(q, where("deleted_at", isDeleted ? "!=" : "==", null))
-
-//   // search email
-//   if (keyword) {
-//     const k = keyword.toLowerCase()
-//     q = query(
-//       q,
-//       orderBy("email_lowercase"),
-//       startAt(k),
-//       endAt(k + "\uf8ff")
-//     )
-//   } else {
-//     q = query(q, orderBy(sortField, sortOrder))
-//   }
-
-//   const snap = await getDocs(q)
-
-//   return snap.docs.map((doc) => ({
-//     id: doc.id,
-//     ...doc.data(),
-//   })) as UserType[]
-// }
-
-const FIRESTORE_SEARCH_SUFFIX = "\uf8ff"
-
-const createUserItem = (doc: any): UserType => ({
-  id: doc.id,
-  ...(doc.data() as Omit<UserType, "id">),
-})
-
-const isActive = (item: UserType): boolean => !item.deleted_at
-const isDeleted = (item: UserType): boolean => !!item.deleted_at
-
-export const getUsers = async (
-  keyword: string = "",
-  sortField: keyof UserType = "created_at",
-  sortOrder: "asc" | "desc" = "desc",
-  showDeleted: boolean = false
-): Promise<UserType[]> => {
-  const colRef = collection(db, "users")
-  const filterFunc = showDeleted ? isDeleted : isActive
-
-  // ================= SEARCH =================
-  if (keyword) {
-    const trimmed = keyword.trim()
-
-    // 👉 search theo ID trước (giống category)
-    const docSnap = await getDoc(doc(db, "users", trimmed))
-    if (docSnap.exists()) {
-      const item = createUserItem(docSnap)
-      return filterFunc(item) ? [item] : []
-    }
-
-    // 👉 search theo email
-    const lower = trimmed.toLowerCase()
-
-    const q = query(
-      colRef,
-      orderBy("email_lowercase"),
-      startAt(lower),
-      endAt(lower + FIRESTORE_SEARCH_SUFFIX)
-    )
-
-    const snapshot = await getDocs(q)
-
-    return snapshot.docs
-      .map(createUserItem)
-      .filter(filterFunc)
+export const createUser = async (data: CreateUserType) => {
+  const isExists = await isUserEmailExists(data.email)
+  if (isExists) {
+    throw new Error("Email already exists!")
   }
 
-  // ================= NORMAL LIST =================
-  const q = query(colRef, orderBy(sortField, sortOrder))
-  const snapshot = await getDocs(q)
+  const hashedPassword = await hashPassword(data.password)
 
-  return snapshot.docs
-    .map(createUserItem)
-    .filter(filterFunc)
-}
+  const newUserRef = await addDoc(userRef, {
+    email: data.email,
+    password: hashedPassword,
+    role: data.role || "user", // nếu có role
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  })
 
-// ================= GET DETAIL =================
-export async function getUserById(id: string) {
-  const snap = await getDoc(doc(db, "users", id))
-  if (!snap.exists()) return null
+  const newUser = await getDoc(newUserRef)
 
   return {
-    id: snap.id,
-    ...snap.data(),
-  } as UserType
+    ...(newUser.data() as UserType),
+    id: newUser.id,
+  }
 }
 
-// ================= UPDATE =================
-export async function updateUser(
-  id: string,
-  data: Partial<UserType>
-) {
-  await updateDoc(doc(db, "users", id), data)
-}
+//GET ALL USERS
+export const getUsers = async (
+  keyword: string = '',
+  sortField: string = 'created_at',
+  sortOrder: "asc" | "desc" = "desc",
+  showDeleted: boolean = false,
+): Promise<UserType[]> => {
+  const q = query(userRef, orderBy("created_at", "desc"))
+  const snapshot = await getDocs(q)
 
-// ================= DELETE (SOFT) =================
-export async function deleteUser(id: string) {
-  await updateDoc(doc(db, "users", id), {
-    deleted_at: new Date().toISOString(),
+  return snapshot.docs.map((doc) => {
+    const data = doc.data() as UserType
+    const { id, ...rest } = data as any
+
+    return {
+      id: doc.id,
+      ...rest,
+    }
   })
-}
-
-// ================= CHECK EMAIL =================
-export async function checkEmailExists(email_lowercase: string) {
-  const q = query(
-    col,
-    where("email_lowercase", "==", email_lowercase),
-    where("deleted_at", "==", null)
-  )
-
-  const snap = await getDocs(q)
-  return !snap.empty
 }

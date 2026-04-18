@@ -1,18 +1,18 @@
-import { findAdminByEmail, isEmailExists } from "@/app/features/admin/model"
 import { comparePassword } from "@/app/features/login/password"
 import { formSchema } from "@/app/features/login/validation"
+import { findUserByEmail, isUserEmailExists } from "@/app/features/users/model"
 import NextAuth, { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
-const loginAdmin = async (email: string, password: string) => {
+const handleLogin = async (email: string, password: string) => {
     // 1. Kiểm tra sự tồn tại của email
-    const emailExists = await isEmailExists(email)
+    const emailExists = await isUserEmailExists(email)
     if (!emailExists) {
         throw new Error("Email không tồn tại")
     }
 
     // 2. Lấy thông tin admin
-    const admin = await findAdminByEmail(email)
+    const admin = await findUserByEmail(email)
 
     // 3. Kiểm tra password
     const isMatch = await comparePassword(password, admin.password)
@@ -24,6 +24,7 @@ const loginAdmin = async (email: string, password: string) => {
     return {
         id: admin.id.toString(),
         email: admin.email,
+        role: admin.role,
         // name: admin.email.split('@')[0], // Optional: lấy prefix email làm tên
     }
 }
@@ -57,10 +58,10 @@ export const authOptions: NextAuthOptions = {
 
                 try {
                     // Gọi hàm bóc tách
-                    const user = await loginAdmin(parsed.data.email, parsed.data.password)
+                    const user = await handleLogin(parsed.data.email, parsed.data.password)
                     return user
                 } catch (error: any) {
-                    // Bắn lỗi từ loginAdmin ra ngoài giao diện
+                    // Bắn lỗi từ handleLogin ra ngoài giao diện
                     throw new Error(error.message)
                 }
             }
@@ -69,12 +70,20 @@ export const authOptions: NextAuthOptions = {
     ],
 
     callbacks: {
-        async jwt({ token, user }) {
-            if (user) token.id = user.id
+        async jwt({ token, user }: any) {
+            if (user) {
+                token.id = user.id as string
+                token.email = user.email as string
+                token.role = user.role as string
+            }
             return token
         },
         async session({ session, token }: any) {
-            if (session.user) session.user.id = token.id as string
+            if (session.user) {
+                session.user.id = token.id as string
+                session.user.email = token.email as string
+                session.user.role = token.role as string
+            }
             return session
         }
     },

@@ -1,5 +1,4 @@
-import { createUser, getUsers, checkEmailExists } from "@/app/features/users/model"
-import { userSchema } from "@/app/features/users/validation"
+import { createUser, getUsers } from "@/app/features/users/model"
 import { NextRequest, NextResponse } from "next/server"
 
 // ================= GET =================
@@ -25,56 +24,8 @@ export async function GET(req: NextRequest) {
 }
 
 // ================= POST =================
-export async function POST(req: Request) {
-  try {
-    const body = await req.json()
-    const result = userSchema.safeParse(body)
-
-    if (!result.success) {
-      const errors = result.error.flatten().fieldErrors
-
-      return NextResponse.json(
-        {
-          success: false,
-          error: Object.values(errors)[0]?.[0],
-        },
-        { status: 400 }
-      )
-    }
-
-    const data = result.data
-    const email_lowercase = data.email.toLowerCase()
-
-    // check email
-    const isExist = await checkEmailExists(email_lowercase)
-
-    if (isExist) {
-      return NextResponse.json(
-        { success: false, error: "Email đã tồn tại" },
-        { status: 400 }
-      )
-    }
-
-    const id = await createUser({
-      email: data.email,
-      email_lowercase,
-      password: data.password,
-      role: data.role,
-      isActive: true,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      deleted_at: null,
-    })
-
-    return NextResponse.json({
-      success: true,
-      message: "Tạo user thành công",
-      data: { id },
-    })
-  } catch (err) {
-    return NextResponse.json(
-      { success: false, error: "Server error" },
-      { status: 500 }
-    )
-  }
+export const POST = async (req: Request) => {
+  const data = await req.json()
+  const user = await createUser(data)
+  return NextResponse.json(user)
 }

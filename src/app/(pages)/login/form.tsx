@@ -52,7 +52,13 @@ export function FormLoginCustom({ className, onLogin, ...props }: LoginFormProps
           <form onSubmit={form.handleSubmit(handleSubmit)}>
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="email">Email (nhat@nhat.com)</FieldLabel>
+                <FieldLabel htmlFor="email" className="block">
+                  <div>Email:</div>
+                  <div>
+                    <div>(1-role-admin: admin@gmail.com)</div>
+                    <div>(2-role-user: nhat@gmail.com)</div>
+                  </div>
+                </FieldLabel>
                 <Input
                   id="email"
                   type="email"
@@ -68,7 +74,10 @@ export function FormLoginCustom({ className, onLogin, ...props }: LoginFormProps
               </Field>
               <Field>
                 <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password (123)</FieldLabel>
+                  <FieldLabel htmlFor="password" className="block">
+                    <div>Password:</div>
+                    <div>(123)</div>
+                  </FieldLabel>
                   <a
                     href="#"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
