@@ -24,8 +24,59 @@ export async function GET(req: NextRequest) {
 }
 
 // ================= POST =================
+// export const POST = async (req: Request) => {
+//   const data = await req.json()
+//   const user = await createUser(data)
+//   return NextResponse.json(user)
+// }
+
+// import { NextResponse } from "next/server"
+// import { createUser } from "@/app/features/users/model"
+
+// export const POST = async (req: Request) => {
+//   try {
+//     const data = await req.json()
+
+//     const user = await createUser(data)
+
+//     return NextResponse.json({
+//       message: "Tạo user thành công", // 👈 BE quyết định message
+//       data: user,
+//     })
+//   } catch (err: any) {
+//     return NextResponse.json(
+//       {
+//         error: err.message, // 👈 BE quyết định luôn message lỗi
+//       },
+//       {
+//         status: 400, // 👈 cực kỳ quan trọng
+//       }
+//     )
+//   }
+// }
+
+// import { NextResponse } from "next/server"
+// import { createUser } from "@/app/features/users/model"
+
 export const POST = async (req: Request) => {
-  const data = await req.json()
-  const user = await createUser(data)
-  return NextResponse.json(user)
+  try {
+    const data = await req.json()
+
+    const user = await createUser(data)
+
+    return NextResponse.json(
+      {
+        message: "Tạo user thành công", // 👈 BE giữ message
+        data: user,
+      },
+      { status: 201 }
+    )
+  } catch (err: any) {
+    return NextResponse.json(
+      {
+        error: err.message || "Server error", // 👈 BE giữ luôn lỗi
+      },
+      { status: 400 } // 👈 để FE biết là lỗi
+    )
+  }
 }

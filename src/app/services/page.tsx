@@ -3,7 +3,7 @@ import React from 'react'
 import { db } from './firebase'
 
 export default async function TestConnect() {
-    const snapshot = await getDocs(collection(db, "test"))
+    const snapshot = await getDocs(collection(db, "a_test_connect"))
 
     const data = snapshot.docs.map(doc => ({
         id: doc.id,
@@ -12,9 +12,11 @@ export default async function TestConnect() {
 
     console.log("TestConnect-Success:", data)
     return (
-        <div>
-            <div>TestConnect-Success: </div>
-            <div>{JSON.stringify(data)}</div>
-        </div>
+        <html>
+            <body>
+                <div>TestConnect-Success: </div>
+                <div>{JSON.stringify(data)}</div>
+            </body>
+        </html>
     )
 }

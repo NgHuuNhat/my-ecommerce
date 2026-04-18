@@ -3,12 +3,18 @@ import { addDoc, collection, getDoc, getDocs, orderBy, query, Timestamp, where }
 import { CreateUserType, UserType } from "./type"
 import { hashPassword } from "../login/password"
 
-// CREATE USER
+
 const COLLECTION = "users"
 const userRef = collection(db, COLLECTION)
 
+//FIND EMAIL
 export const findUserByEmail = async (email: string): Promise<UserType> => {
   const exitedUser = await getDocs(query(userRef, where('email', '==', email)))
+  
+  if (exitedUser.empty) {
+    throw new Error("User không tồn tại")
+  }
+  
   const user = exitedUser.docs[0].data() as UserType
   return {
     ...user,
@@ -17,6 +23,7 @@ export const findUserByEmail = async (email: string): Promise<UserType> => {
   }
 }
 
+// CHECK EMAIL EXISTS
 export const isUserEmailExists = async (email: string): Promise<boolean> => {
   const exitedEmail = await getDocs(
     query(userRef, where("email", "==", email))
@@ -24,10 +31,11 @@ export const isUserEmailExists = async (email: string): Promise<boolean> => {
   return !exitedEmail.empty
 }
 
+// CREATE USER
 export const createUser = async (data: CreateUserType) => {
   const isExists = await isUserEmailExists(data.email)
   if (isExists) {
-    throw new Error("Email already exists!")
+    throw new Error("Email đã tồn tại!")
   }
 
   const hashedPassword = await hashPassword(data.password)

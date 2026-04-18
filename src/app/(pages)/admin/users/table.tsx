@@ -104,6 +104,7 @@ export const schema = z.object({
   id: z.string(),
   name: z.string(),
   email: z.string(),
+  role: z.enum(["admin", "user"]),
   created_at: z.string(),
   updated_at: z.string(),
 })
@@ -181,6 +182,18 @@ function createColumns(router: ReturnType<typeof useRouter>): ColumnDef<z.infer<
         <div className="w-32">
           <Badge variant="outline">
             {row.original.email || "email"}
+          </Badge>
+        </div>
+      ),
+    },
+
+    {
+      accessorKey: "role",
+      header: "Role",
+      cell: ({ row }) => (
+        <div className="w-32">
+          <Badge variant="outline">
+            {row.original.role || "role"}
           </Badge>
         </div>
       ),

@@ -1,6 +1,5 @@
 'use client'
 
-import { CreateAdminType } from "@/app/features/admin/type"
 import { getSession, signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"

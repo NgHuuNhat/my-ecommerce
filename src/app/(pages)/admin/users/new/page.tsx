@@ -20,19 +20,19 @@ export default function NewUserPage() {
 
       // ❌ lỗi từ BE
       if (!res.ok) {
-        toast.error(result.error || "Tạo user thất bại")
+        toast.error(result.error) // 👈 chỉ lấy từ BE
         return false
       }
-
       // ✅ success
-      toast.success(result.message || "Tạo user thành công")
+      toast.success(result.message) // 👈 chỉ lấy từ BE
 
       router.push("/admin/users") // 👉 quay về list
       router.refresh()
-
       return true
+
     } catch (err) {
-      toast.error("Có lỗi xảy ra")
+      // ❗ lỗi network (BE không trả về)
+      toast.error("Network error")
       return false
     }
   }

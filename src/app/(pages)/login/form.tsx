@@ -99,7 +99,7 @@ export function FormLoginCustom({ className, onLogin, ...props }: LoginFormProps
                 </Button>
                 <Link href='/'>
                   <Button variant="outline" type="button">
-                    Click Home Page!
+                    go to Home!
                   </Button>
                 </Link>
                 <FieldDescription className="text-center">
