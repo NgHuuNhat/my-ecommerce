@@ -258,7 +258,7 @@ function createColumns(router: ReturnType<typeof useRouter>): ColumnDef<z.infer<
               size="sm"
               className="bg-red-100 text-red-700 hover:bg-red-200"
               onClick={async () => {
-                const confirmDelete = confirm(`Xóa "${data.name}"?`)
+                const confirmDelete = confirm(`Xóa "${data.email}"?`)
                 if (!confirmDelete) return
 
                 // const res = await fetch(`/api/users/${data.id}`, {

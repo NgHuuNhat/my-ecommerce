@@ -31,7 +31,7 @@ export default function AdminLayout({ children }: any) {
                 ),
             },
             {
-                name: "users",
+                name: "users (dang code...)",
                 url: "/admin/users",
                 icon: (
                     <DatabaseIcon
