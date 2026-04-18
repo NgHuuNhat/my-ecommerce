@@ -242,7 +242,10 @@ function createColumns(router: ReturnType<typeof useRouter>): ColumnDef<z.infer<
 
         return (
           <div className="flex items-center gap-2">
-            <Link href={`/admin/users/edit/${data.id}`}>
+            <Link
+              //  href={`/admin/users/edit/${data.id}`}
+              href='#'
+            >
               <Button
                 size="sm"
                 className="bg-yellow-100 text-yellow-700 hover:bg-yellow-200"
@@ -258,19 +261,19 @@ function createColumns(router: ReturnType<typeof useRouter>): ColumnDef<z.infer<
                 const confirmDelete = confirm(`Xóa "${data.name}"?`)
                 if (!confirmDelete) return
 
-                const res = await fetch(`/api/users/${data.id}`, {
-                  method: "DELETE",
-                })
+                // const res = await fetch(`/api/users/${data.id}`, {
+                //   method: "DELETE",
+                // })
 
-                const result = await res.json()
+                // const result = await res.json()
 
-                if (!res.ok) {
-                  toast.error(result.message)
-                  return
-                }
+                // if (!res.ok) {
+                //   toast.error(result.message)
+                //   return
+                // }
 
-                toast.success("Xóa thành công")
-                router.refresh()
+                // toast.success("Xóa thành công")
+                // router.refresh()
               }}
             >
               Delete <Trash2 />
@@ -475,19 +478,19 @@ export function DataTable({
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Link href={"/admin/users/new"}>
+          {/* <Link href={"/admin/users/new"}>
             <Button size="sm" variant="outline" className="bg-blue-100 hover:bg-blue-200 text-blue-500 hover:text-blue-700">
               <PlusIcon />
               <span className="hidden lg:inline ">Add User</span>
             </Button>
-          </Link>
+          </Link> */}
 
-          <Link href={"/admin/users/trash"}>
+          {/* <Link href={"/admin/users/trash"}>
             <Button size="sm" variant="outline" className="bg-red-100 hover:bg-red-200 text-red-500 hover:text-red-700">
               <Trash2 />
               <span className="hidden lg:inline">Trash User</span>
             </Button>
-          </Link>
+          </Link> */}
         </div>
       </div>
 
