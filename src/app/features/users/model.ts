@@ -1,5 +1,5 @@
 import { db } from "@/app/services/firebase"
-import { addDoc, collection, doc, endAt, getDoc, getDocs, orderBy, query, startAt, Timestamp, where } from "firebase/firestore"
+import { addDoc, collection, doc, endAt, getDoc, getDocs, orderBy, query, startAt, Timestamp, updateDoc, where } from "firebase/firestore"
 import { CreateUserType, defaultUserQuery, UserQuery, UserType } from "./type"
 import { hashPassword } from "../login/password"
 
@@ -56,6 +56,7 @@ export const createUser = async (data: CreateUserType) => {
   }
 }
 
+// GET ALL
 export const getUsers = async (params: UserQuery = {}) => {
   const { keyword, sortField, sortOrder, deleted } = defaultUserQuery(params)
 
@@ -86,4 +87,49 @@ export const getUsers = async (params: UserQuery = {}) => {
 
   const snap = await getDocs(query(userRef, orderBy(sortField, sortOrder === "asc" ? "asc" : "desc")))
   return snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(filter)
+}
+
+// GET ONE USER
+export const getUserById = async (id: string) => {
+  const snap = await getDoc(doc(userRef, id))
+
+  if (!snap.exists()) {
+    throw new Error("User không tồn tại")
+  }
+
+  return {
+    id: snap.id,
+    ...snap.data(),
+  }
+}
+
+// EDIT USER
+export const updateUser = async (id: string, data: Partial<CreateUserType>) => {
+  // 1. tìm user
+  const snap = await getDoc(doc(userRef, id))
+
+  if (!snap.exists()) {
+    throw new Error("User không tồn tại")
+  }
+
+  const currentUser = snap.data() as UserType
+
+  // 2. nếu update email thì check trùng
+  if (data.email && data.email !== currentUser.email) {
+    const q = await getDocs(query(userRef, where("email", "==", data.email)))
+
+    if (!q.empty) {
+      throw new Error("Email đã tồn tại")
+    }
+  }
+
+  // 3. update
+  await updateDoc(doc(userRef, id), {
+    ...data,
+    updated_at: new Date().toISOString(),
+  })
+
+  return {
+    message: "Cập nhật user thành công",
+  }
 }

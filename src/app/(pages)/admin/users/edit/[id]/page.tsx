@@ -11,7 +11,6 @@ export default function EditUserPage() {
     const router = useRouter()
     const params = useParams()
     const id = params.id as string
-
     const [loading, setLoading] = useState(true)
     const [data, setData] = useState<UserFormValues | null>(null)
 

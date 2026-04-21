@@ -243,8 +243,7 @@ function createColumns(router: ReturnType<typeof useRouter>): ColumnDef<z.infer<
         return (
           <div className="flex items-center gap-2">
             <Link
-              // href={`/admin/users/edit/${data.id}`}
-              href='#'
+              href={`/admin/users/edit/${data.id}`}
             >
               <Button
                 size="sm"
