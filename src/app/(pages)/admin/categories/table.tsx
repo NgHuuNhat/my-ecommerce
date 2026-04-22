@@ -172,13 +172,24 @@ function createColumns(router: ReturnType<typeof useRouter>): ColumnDef<z.infer<
         </div>
       ),
     },
+    // {
+    //   accessorKey: "name",
+    //   header: "Name",
+    //   cell: ({ row }) => {
+    //     return <TableCellViewer item={row.original} />
+    //   },
+    //   enableHiding: false,
+    // },
     {
       accessorKey: "name",
       header: "Name",
-      cell: ({ row }) => {
-        return <TableCellViewer item={row.original} />
-      },
-      enableHiding: false,
+      cell: ({ row }) => (
+        <div className="w-32">
+          <Badge variant="outline" className="px-1.5 text-muted-foreground">
+            {row.original.name || "name"}
+          </Badge>
+        </div>
+      ),
     },
     {
       accessorKey: "slug",
