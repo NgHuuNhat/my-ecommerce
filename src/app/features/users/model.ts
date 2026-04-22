@@ -1,5 +1,5 @@
 import { db } from "@/app/services/firebase"
-import { addDoc, collection, doc, endAt, getDoc, getDocs, orderBy, query, startAt, Timestamp, updateDoc, where } from "firebase/firestore"
+import { addDoc, collection, deleteDoc, doc, endAt, getDoc, getDocs, orderBy, query, startAt, Timestamp, updateDoc, where } from "firebase/firestore"
 import { CreateUserType, defaultUserQuery, UserQuery, UserType } from "./type"
 import { hashPassword } from "../login/password"
 
@@ -123,6 +123,15 @@ export const updateUser = async (id: string, data: Partial<CreateUserType>) => {
     }
   }
 
+  // 2. xử lý password
+  if (data.password) {
+    // hash password mới
+    data.password = await hashPassword(data.password)
+  } else {
+    // không update password nếu không truyền lên
+    delete data.password
+  }
+
   // 3. update
   await updateDoc(doc(userRef, id), {
     ...data,
@@ -131,5 +140,67 @@ export const updateUser = async (id: string, data: Partial<CreateUserType>) => {
 
   return {
     message: "Cập nhật user thành công",
+  }
+}
+
+// DELETE USER (SOFT DELETE)
+export const deleteUser = async (id: string) => {
+  // 1. tìm user
+  const snap = await getDoc(doc(userRef, id))
+
+  if (!snap.exists()) {
+    throw new Error("User không tồn tại")
+  }
+
+  // 2. soft delete bằng cách set deleted_at
+  await updateDoc(doc(userRef, id), {
+    deleted_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  })
+
+  return {
+    message: "Xóa user thành công",
+  }
+}
+
+// RESTORE USER
+export const restoreUser = async (id: string) => {
+  // 1. tìm user
+  const snap = await getDoc(doc(userRef, id))
+
+  if (!snap.exists()) {
+    throw new Error("User không tồn tại")
+  }
+
+  // 2. restore bằng cách set deleted_at về null
+  await updateDoc(doc(userRef, id), {
+    deleted_at: null,
+    updated_at: new Date().toISOString(),
+  })
+
+  return {
+    message: "Khôi phục user thành công",
+  }
+}
+
+// FORCE DELETE (XOÁ VĨNH VIỄN)
+export const forceDeleteUser = async (id: string) => {
+  if (!id) throw new Error("Thiếu user id")
+
+  const ref = doc(userRef, id)
+  const snap = await getDoc(ref)
+
+  if (!snap.exists()) {
+    throw new Error("User không tồn tại")
+  }
+
+  if (!snap.data().deleted_at) {
+    throw new Error("User chưa bị xoá")
+  }
+
+  await deleteDoc(ref)
+
+  return {
+    message: "Đã xoá vĩnh viễn user",
   }
 }

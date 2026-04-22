@@ -260,19 +260,19 @@ function createColumns(router: ReturnType<typeof useRouter>): ColumnDef<z.infer<
                 const confirmDelete = confirm(`Xóa "${data.email}"?`)
                 if (!confirmDelete) return
 
-                // const res = await fetch(`/api/users/${data.id}`, {
-                //   method: "DELETE",
-                // })
+                const res = await fetch(`/api/users/${data.id}`, {
+                  method: "DELETE",
+                })
 
-                // const result = await res.json()
+                const result = await res.json()
 
-                // if (!res.ok) {
-                //   toast.error(result.message)
-                //   return
-                // }
+                if (!res.ok) {
+                  toast.error(result.message)
+                  return
+                }
 
-                // toast.success("Xóa thành công")
-                // router.refresh()
+                toast.success(result.message)
+                router.refresh()
               }}
             >
               Delete <Trash2 />
@@ -484,12 +484,12 @@ export function DataTable({
             </Button>
           </Link>
 
-          {/* <Link href={"/admin/users/trash"}>
+          <Link href={"/admin/users/trash"}>
             <Button size="sm" variant="outline" className="bg-red-100 hover:bg-red-200 text-red-500 hover:text-red-700">
               <Trash2 />
               <span className="hidden lg:inline">Trash User</span>
             </Button>
-          </Link> */}
+          </Link>
         </div>
       </div>
 

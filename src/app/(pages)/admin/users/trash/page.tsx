@@ -16,27 +16,19 @@ import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { RotateCcw, Trash2 } from 'lucide-react'
 import Link from 'next/link'
-import { formatDate } from '@/app/features/categories/format-date'
-
-interface DeletedCategory {
-    id: string
-    name: string
-    slug: string
-    description: string
-    created_at: string
-    updated_at: string
-    deleted_at: string
-}
+// import { formatDate } from '@/app/features/categories/format-date'
+import { UserType } from '@/app/features/users/type'
+import { formatDate } from '@/app/features/users/format-date'
 
 export default function TrashPage() {
-    const [items, setItems] = useState<DeletedCategory[]>([])
+    const [items, setItems] = useState<UserType[]>([])
     const [loading, setLoading] = useState(true)
     const [keyword, setKeyword] = useState('')
 
-    const fetchDeletedCategories = async (searchTerm = '') => {
+    const fetchDeletedUsers = async (searchTerm = '') => {
         try {
             const queryString = searchTerm ? `?deleted=true&keyword=${encodeURIComponent(searchTerm)}` : '?deleted=true'
-            const res = await fetch(`/api/categories${queryString}`)
+            const res = await fetch(`/api/users${queryString}`)
             const result = await res.json()
 
             if (!res.ok) {
@@ -53,7 +45,7 @@ export default function TrashPage() {
     }
 
     const debouncedFetch = useMemo(
-        () => debounce((value: string) => fetchDeletedCategories(value), 200),
+        () => debounce((value: string) => fetchDeletedUsers(value), 200),
         []
     )
 
@@ -67,7 +59,7 @@ export default function TrashPage() {
     )
 
     useEffect(() => {
-        fetchDeletedCategories()
+        fetchDeletedUsers()
     }, [])
 
     useEffect(() => {
@@ -81,7 +73,7 @@ export default function TrashPage() {
         if (!confirmRestore) return
 
         try {
-            const res = await fetch(`/api/categories/${id}/restore`, {
+            const res = await fetch(`/api/users/${id}/restore`, {
                 method: 'PATCH',
             })
 
@@ -106,19 +98,19 @@ export default function TrashPage() {
         if (!confirmDelete) return
 
         try {
-            const res = await fetch(`/api/categories/${id}`, {
+            const res = await fetch(`/api/users/${id}/restore`, {
                 method: 'DELETE',
-                headers: { 'X-Force-Delete': 'true' },
             })
 
             const result = await res.json()
 
             if (!res.ok) {
-                toast.error(result.message || 'Delete failed')
+                toast.error(result.error)
                 return
             }
 
-            toast.success('Permanently deleted successfully')
+            toast.success(result.message)
+            
             setItems(items.filter(item => item.id !== id))
         } catch (err) {
             toast.error('An error occurred')
@@ -140,9 +132,9 @@ export default function TrashPage() {
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="text-2xl font-semibold">Trash</h1>
-                        <p className="text-sm text-muted-foreground">Manage soft-deleted categories and restore or permanently delete items.</p>
+                        <p className="text-sm text-muted-foreground">Manage soft-deleted users and restore or permanently delete items.</p>
                     </div>
-                    <Link href="/admin/categories">
+                    <Link href="/admin/users">
                         <Button>←</Button>
                     </Link>
                 </div>
@@ -168,9 +160,9 @@ export default function TrashPage() {
                         <TableHeader className="bg-muted">
                             <TableRow>
                                 <TableHead>ID</TableHead>
-                                <TableHead>Name</TableHead>
-                                <TableHead>Slug</TableHead>
-                                <TableHead>Description</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Role</TableHead>
+                                {/* <TableHead>Description</TableHead> */}
                                 <TableHead>Deleted At</TableHead>
                                 <TableHead>Actions</TableHead>
                             </TableRow>
@@ -183,17 +175,17 @@ export default function TrashPage() {
                                             {item.id}
                                         </Badge>
                                     </TableCell>
-                                    <TableCell className="font-medium">{item.name}</TableCell>
+                                    <TableCell className="font-medium">{item.email}</TableCell>
                                     <TableCell>
                                         <Badge variant="outline" className="px-1.5 text-muted-foreground">
-                                            {item.slug}
+                                            {item.role}
                                         </Badge>
                                     </TableCell>
-                                    <TableCell className="max-w-xs truncate text-sm">
+                                    {/* <TableCell className="max-w-xs truncate text-sm">
                                         <Badge variant="outline" className="px-1.5 text-muted-foreground">
                                             {item.description || '-'}
                                         </Badge>
-                                    </TableCell>
+                                    </TableCell> */}
                                     <TableCell>
                                         <Badge variant="outline" className="px-1.5 text-muted-foreground">
                                             {formatDate(item.deleted_at)}
@@ -203,7 +195,7 @@ export default function TrashPage() {
                                         <div className="flex gap-2">
                                             <Button
                                                 size="sm"
-                                                onClick={() => handleRestore(item.id, item.name)}
+                                                onClick={() => handleRestore(item.id, item.email)}
                                                 className=' bg-green-100 hover:bg-green-200 text-green-700 hover:text-green-900'
                                             >
                                                 <RotateCcw className="size-4" />
@@ -213,7 +205,7 @@ export default function TrashPage() {
                                                 size="sm"
                                                 variant="destructive"
                                                 onClick={() =>
-                                                    handlePermanentDelete(item.id, item.name)
+                                                    handlePermanentDelete(item.id, item.email)
                                                 }
                                             >
                                                 <Trash2 className="size-4" />

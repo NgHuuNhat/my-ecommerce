@@ -1,4 +1,4 @@
-import { getUserById, updateUser } from "@/app/features/users/model"
+import { deleteUser, getUserById, restoreUser, updateUser } from "@/app/features/users/model"
 import { NextRequest, NextResponse } from "next/server"
 
 // GET ONE USER
@@ -21,7 +21,7 @@ export async function GET(
     }
 }
 
-// PUT - UPDATE USER
+// PATCH - UPDATE USER
 export async function PATCH(
     req: NextRequest,
     context: { params: Promise<{ id: string }> }
@@ -34,6 +34,24 @@ export async function PATCH(
 
     } catch (error: any) {
         return NextResponse.json(
+            { error: error.message },
+            { status: 400 }
+        )
+    }
+}
+
+// DELETE - SOFT DELETE USER
+export async function DELETE(
+    req: Request,
+    context: { params: Promise<{ id: string }> }
+) {
+    try {
+        const { id } = await context.params
+        const result = await deleteUser(id)
+        return Response.json(result)
+
+    } catch (error: any) {
+        return Response.json(
             { error: error.message },
             { status: 400 }
         )
