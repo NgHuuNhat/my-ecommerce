@@ -24,6 +24,7 @@ export default function NewCategoryPage() {
             }
 
             toast.success(result.message || "Tạo thành công")
+            router.push("/admin/categories") // 👉 quay về list
             router.refresh()
             return true
         } catch (err) {
