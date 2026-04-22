@@ -15,7 +15,7 @@ export default function AdminLayout({ children }: any) {
                 ),
             },
             {
-                name: "admin",
+                name: "admin page",
                 url: "/admin",
                 icon: (
                     <DatabaseIcon
@@ -23,7 +23,7 @@ export default function AdminLayout({ children }: any) {
                 ),
             },
             {
-                name: "categories",
+                name: "categories management",
                 url: "/admin/categories",
                 icon: (
                     <DatabaseIcon
@@ -31,7 +31,7 @@ export default function AdminLayout({ children }: any) {
                 ),
             },
             {
-                name: "users",
+                name: "users management",
                 url: "/admin/users",
                 icon: (
                     <DatabaseIcon
