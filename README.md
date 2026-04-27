@@ -22,7 +22,7 @@
 - Order status
 
 ## DB design
-### Admins (managers)
+### Admins (managers) 
 - email: string
 - password: string
 - isActive: boolean

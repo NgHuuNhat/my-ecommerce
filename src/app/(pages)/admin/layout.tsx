@@ -38,6 +38,14 @@ export default function AdminLayout({ children }: any) {
                     />
                 ),
             },
+            {
+                name: "products management",
+                url: "/admin/products",
+                icon: (
+                    <DatabaseIcon
+                    />
+                ),
+            },
         ],
     }
 
