@@ -72,14 +72,30 @@ export const getCategoryById = async (id: string): Promise<CategoryType | null> 
 
 // CREATE
 export const createCategory = async (data: any) => {
-  const name = data.name
-  return await addDoc(collection(db, COLLECTION), {
+  // const name = data.name
+
+  const payload = {
     ...data,
-    name_lowercase: name.toLowerCase(),
+    name_lowercase: data.name.toLowerCase(),
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     deleted_at: null,
-  });
+  }
+
+  const docRef = await addDoc(collection(db, COLLECTION), payload)
+
+  return {
+    id: docRef.id,
+    ...payload,
+  }
+
+  // return await addDoc(collection(db, COLLECTION), {
+  //   ...data,
+  //   name_lowercase: name.toLowerCase(),
+  //   created_at: new Date().toISOString(),
+  //   updated_at: new Date().toISOString(),
+  //   deleted_at: null,
+  // });
 };
 
 // UPDATE

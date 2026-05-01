@@ -43,7 +43,7 @@ export const createUser = async (data: CreateUserType) => {
   const newUserRef = await addDoc(userRef, {
     email: data.email,
     password: hashedPassword,
-    role: data.role || "user", // nếu có role
+    role: data.role || "user", 
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   })

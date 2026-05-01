@@ -25,7 +25,7 @@ export const POST = async (req: NextRequest) => {
     const user = await createUser(data)
     return NextResponse.json(
       {
-        message: "Tạo user thành công", // 👈 BE giữ message
+        message: "Tạo user thành công", 
         data: user,
       },
       { status: 201 }
@@ -34,9 +34,9 @@ export const POST = async (req: NextRequest) => {
   } catch (err: any) {
     return NextResponse.json(
       {
-        error: err.message || "Server error", // 👈 BE giữ luôn lỗi
+        error: err.message || "Server error", 
       },
-      { status: 400 } // 👈 để FE biết là lỗi
+      { status: 400 } 
     )
   }
 }

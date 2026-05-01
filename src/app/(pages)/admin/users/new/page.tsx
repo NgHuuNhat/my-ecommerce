@@ -18,20 +18,19 @@ export default function NewUserPage() {
 
       const result = await res.json()
 
-      // ❌ lỗi từ BE
+      // lỗi từ BE
       if (!res.ok) {
-        toast.error(result.error) // 👈 chỉ lấy từ BE
+        toast.error(result.error) 
         return false
       }
-      // ✅ success
-      toast.success(result.message) // 👈 chỉ lấy từ BE
+      // success
+      toast.success(result.message) 
 
-      router.push("/admin/users") // 👉 quay về list
+      router.push("/admin/users") 
       router.refresh()
       return true
 
     } catch (err) {
-      // ❗ lỗi network (BE không trả về)
       toast.error("Network error")
       return false
     }
