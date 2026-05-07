@@ -27,6 +27,7 @@ export const productSchema = z.object({
   description: z
     .string()
     .min(2, "Description phải ít nhất 2 ký tự"),
+  images: z.array(z.string()),
   // created_id: z.object({
   //   id: z.string().min(1, "User id không hợp lệ"),
   // }),

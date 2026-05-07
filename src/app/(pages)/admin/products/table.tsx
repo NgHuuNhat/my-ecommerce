@@ -105,6 +105,7 @@ export const schema = z.object({
   name: z.string(),
   slug: z.string(),
   description: z.string(),
+  images: z.array(z.string()).optional(),
   created_at: z.string(),
   updated_at: z.string(),
 })
@@ -180,6 +181,38 @@ function createColumns(router: ReturnType<typeof useRouter>): ColumnDef<z.infer<
     //   },
     //   enableHiding: false,
     // },
+    {
+      accessorKey: "images",
+      header: "Images",
+      cell: ({ row }) => {
+        const images = row.original.images || []
+
+        return (
+          <div className="flex items-center gap-2">
+            {/* thumbnail */}
+            {images[0] ? (
+              <img
+                src={images[0]}
+                alt="product"
+                className="w-12 h-12 rounded-md object-cover border"
+              />
+            ) : (
+              <div className="w-12 h-12 rounded-md border flex items-center justify-center text-xs text-muted-foreground">
+                No img
+              </div>
+            )}
+
+            {/* count */}
+            <Badge
+              variant="outline"
+              className="px-1.5 text-muted-foreground"
+            >
+              {images.length} images
+            </Badge>
+          </div>
+        )
+      },
+    },
     {
       accessorKey: "name",
       header: "Name",

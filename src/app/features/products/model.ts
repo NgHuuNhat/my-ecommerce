@@ -1,4 +1,4 @@
-import { db } from "@/app/services/firebase";
+import { db, storage } from "@/app/services/firebase";
 import {
   collection,
   getDocs,
@@ -15,6 +15,7 @@ import {
 import { ProductQuery, ProductType } from "./type";
 import { getUserById } from "../users/model";
 import { getCategoryById } from "../categories/model";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const COLLECTION = "products"
 const FIRESTORE_SEARCH_SUFFIX = "\uf8ff"
@@ -83,41 +84,80 @@ export const getProductById = async (id: string): Promise<ProductType | null> =>
 }
 
 // 🔹 CREATE
+// export const createProduct = async (data: ProductType) => {
+//   try {
+//     const { name, user_id, category_id, ...restData } = data
+
+//     // 🔥 validate
+//     if (!name) throw new Error("Name không được để trống")
+//     if (!user_id) throw new Error("Thiếu người tạo")
+//     if (!category_id) throw new Error("Thiếu category")
+
+//     const created_by = await getUserById(user_id)
+//     if (!created_by) throw new Error("User không tồn tại")
+
+//     const category_by = await getCategoryById(category_id)
+//     if (!category_by) throw new Error("Category không tồn tại")
+
+//     const docRef = await addDoc(collection(db, COLLECTION), {
+//       ...restData,
+//       name,
+//       name_lowercase: name.toLowerCase(),
+//       created_by,
+//       category_by,
+//       created_at: new Date().toISOString(),
+//       updated_at: new Date().toISOString(),
+//       deleted_at: null,
+//     })
+
+//     return {
+//       id: docRef.id,
+//       message: "Tạo sản phẩm thành công",
+//     }
+
+//   } catch (err: any) {
+//     throw new Error(err.message || "Tạo sản phẩm thất bại")
+//   }
+// }
+
 export const createProduct = async (data: ProductType) => {
   try {
-    const { name, user_id, category_id, ...restData } = data
+    const {
+      name,
+      user_id,
+      category_id,
+      images,
+      ...restData
+    } = data
 
-    // 🔥 validate
+    // validate
     if (!name) throw new Error("Name không được để trống")
     if (!user_id) throw new Error("Thiếu người tạo")
     if (!category_id) throw new Error("Thiếu category")
 
     const created_by = await getUserById(user_id)
-    if (!created_by) throw new Error("User không tồn tại")
+
+    if (!created_by) {
+      throw new Error("User không tồn tại")
+    }
 
     const category_by = await getCategoryById(category_id)
-    if (!category_by) throw new Error("Category không tồn tại")
 
-    // let categories: any[] = []
-
-    // if (category_id.length > 0) {
-    //   const results = await Promise.all(
-    //     category_id.map((id: string) => getCategoryById(id))
-    //   )
-
-    //   categories = results.filter(Boolean)
-
-    //   if (categories.length !== category_id.length) {
-    //     throw new Error("Category không hợp lệ")
-    //   }
-    // }
+    if (!category_by) {
+      throw new Error("Category không tồn tại")
+    }
 
     const docRef = await addDoc(collection(db, COLLECTION), {
       ...restData,
+
       name,
+      images: images || [],
+
       name_lowercase: name.toLowerCase(),
+
       created_by,
       category_by,
+
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
       deleted_at: null,
@@ -127,7 +167,6 @@ export const createProduct = async (data: ProductType) => {
       id: docRef.id,
       message: "Tạo sản phẩm thành công",
     }
-
   } catch (err: any) {
     throw new Error(err.message || "Tạo sản phẩm thất bại")
   }
