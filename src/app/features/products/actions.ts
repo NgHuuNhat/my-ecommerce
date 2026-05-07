@@ -1,5 +1,8 @@
 'use server'
-import { uploadProductImage } from "./model"
+
+import { uploadProductImage } from "./upload"
+
+// import { uploadProductImage } from "./model"
 
 
 export async function uploadProductImageAction(image: File) {
