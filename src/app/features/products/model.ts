@@ -173,8 +173,40 @@ export const createProduct = async (data: ProductType) => {
 }
 
 // 🔹 UPDATE
-export const updateProduct = async (id: string, data: any) => {
+// export const updateProduct = async (id: string, data: any) => {
+//   try {
+//     const ref = doc(db, COLLECTION, id)
+
+//     const updateData: any = {
+//       ...data,
+//       updated_at: new Date().toISOString(),
+//     }
+
+//     // 🔥 tránh lỗi name undefined
+//     if (data.name) {
+//       updateData.name_lowercase = data.name.toLowerCase()
+//     }
+
+//     await updateDoc(ref, updateData)
+
+//     return {
+//       message: "Cập nhật sản phẩm thành công",
+//     }
+
+//   } catch (err: any) {
+//     throw new Error(err.message || "Cập nhật thất bại")
+//   }
+// }
+
+// 🔹 UPDATE
+export const updateProduct = async (
+  id: string,
+  data: any
+) => {
+
   try {
+    console.log('data:--------------------------', data)
+
     const ref = doc(db, COLLECTION, id)
 
     const updateData: any = {
@@ -182,19 +214,69 @@ export const updateProduct = async (id: string, data: any) => {
       updated_at: new Date().toISOString(),
     }
 
-    // 🔥 tránh lỗi name undefined
+    // 🔹 update search name
     if (data.name) {
-      updateData.name_lowercase = data.name.toLowerCase()
+
+      updateData.name_lowercase =
+        data.name.toLowerCase()
+    }
+
+    // 🔥 update category_by
+    if (data.category_id) {
+
+      console.log('data.category_id:---------------------', data.category_id)
+
+
+      const category_by =
+        await getCategoryById(
+          data.category_id
+        )
+
+      console.log('category_by:---------------------', category_by)
+
+      if (!category_by) {
+        throw new Error(
+          'Category không tồn tại'
+        )
+      }
+
+      updateData.category_by =
+        category_by
+
+      console.log('updateData.category_by:---------------------', updateData.category_by)
+    }
+
+    // 🔥 update created_by
+    if (data.user_id) {
+
+      const created_by =
+        await getUserById(
+          data.user_id
+        )
+
+      if (!created_by) {
+        throw new Error(
+          'User không tồn tại'
+        )
+      }
+
+      updateData.created_by =
+        created_by
     }
 
     await updateDoc(ref, updateData)
 
     return {
-      message: "Cập nhật sản phẩm thành công",
+      message:
+        'Cập nhật sản phẩm thành công',
     }
 
   } catch (err: any) {
-    throw new Error(err.message || "Cập nhật thất bại")
+
+    throw new Error(
+      err.message ||
+      'Cập nhật thất bại'
+    )
   }
 }
 

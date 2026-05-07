@@ -161,6 +161,8 @@ export default function FormSubmitProduct({
     values: ProductFormValues
   ) => {
 
+    console.log("values", values)
+
     // 🔥 chống spam create
     if (loading) return
 

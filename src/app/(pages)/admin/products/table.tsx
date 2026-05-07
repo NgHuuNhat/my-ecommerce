@@ -294,7 +294,7 @@ function createColumns(router: ReturnType<typeof useRouter>): ColumnDef<z.infer<
 
         return (
           <div className="flex items-center gap-2">
-            <Link href={`/admin/categories/edit/${data.id}`}>
+            <Link href={`/admin/products/edit/${data.id}`}>
               <Button
                 size="sm"
                 className="bg-yellow-100 text-yellow-700 hover:bg-yellow-200 hover:text-yellow-800 cursor-pointer"
@@ -312,7 +312,7 @@ function createColumns(router: ReturnType<typeof useRouter>): ColumnDef<z.infer<
                 if (!confirmDelete) return
 
                 try {
-                  const res = await fetch(`/api/categories/${data.id}`, {
+                  const res = await fetch(`/api/products/${data.id}`, {
                     method: "DELETE"
                   })
 
