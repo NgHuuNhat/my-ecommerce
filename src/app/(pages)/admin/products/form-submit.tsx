@@ -1,6 +1,7 @@
 'use client'
 
 import { productSchema } from '@/app/features/products/validation'
+
 import {
   Field,
   FieldDescription,
@@ -11,18 +12,20 @@ import {
 
 import { Input } from '@/components/ui/input'
 
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroupTextarea
-} from '@/components/ui/input-group'
-
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Controller, useForm } from 'react-hook-form'
 
-import { useEffect, useState } from 'react'
+import {
+  useEffect,
+  useMemo,
+  useState
+} from 'react'
+
+import dynamic from 'next/dynamic'
+
+// import 'react-quill/dist/quill.snow.css'
+import 'react-quill-new/dist/quill.snow.css'
 
 import z from 'zod'
 
@@ -31,6 +34,15 @@ import { Button } from '@/components/ui/button'
 import { useSession } from 'next-auth/react'
 
 import Upload from './upload'
+
+// const ReactQuill = dynamic(
+//   () => import('react-quill'),
+//   { ssr: false }
+// ) 
+const ReactQuill = dynamic(
+  () => import('react-quill-new'),
+  { ssr: false }
+)
 
 export type ProductFormValues =
   z.infer<typeof productSchema>
@@ -55,12 +67,13 @@ export default function FormSubmitProduct({
 
   const isEdit = !!data
 
-  const [categories, setCategories] = useState<Category[]>([])
+  const [categories, setCategories] =
+    useState<Category[]>([])
 
   const [loadingCate, setLoadingCate] =
     useState(true)
 
-  // 🔥 chống spam submit
+  // chống spam submit
   const [loading, setLoading] =
     useState(false)
 
@@ -73,51 +86,72 @@ export default function FormSubmitProduct({
     resolver: zodResolver(productSchema),
 
     defaultValues: {
-      name: data?.name || "",
+      name: data?.name || '',
 
-      slug: data?.slug || "",
+      slug: data?.slug || '',
 
       description:
-        data?.description || "",
+        data?.description || '',
 
       images:
         data?.images || [],
 
       category_id:
-        data?.category_id || "",
+        data?.category_id || '',
 
       user_id:
-        data?.user_id || "",
+        data?.user_id || '',
     }
   })
+
+  // toolbar react quill
+  const modules = useMemo(
+    () => ({
+      toolbar: [
+        [{ header: [1, 2, 3, false] }],
+        ['bold', 'italic', 'underline'],
+        [
+          { list: 'ordered' },
+          { list: 'bullet' }
+        ],
+        ['link'],
+        ['clean'],
+      ],
+    }),
+    []
+  )
 
   // fetch categories
   useEffect(() => {
 
-    const fetchCategories = async () => {
+    const fetchCategories =
+      async () => {
 
-      try {
+        try {
 
-        const res = await fetch(
-          '/api/categories'
-        )
+          const res = await fetch(
+            '/api/categories'
+          )
 
-        const json = await res.json()
+          const json =
+            await res.json()
 
-        setCategories(json.data || [])
+          setCategories(
+            json.data || []
+          )
 
-      } catch (err) {
+        } catch (err) {
 
-        console.error(
-          'Fetch categories error:',
-          err
-        )
+          console.error(
+            'Fetch categories error:',
+            err
+          )
 
-      } finally {
+        } finally {
 
-        setLoadingCate(false)
+          setLoadingCate(false)
+        }
       }
-    }
 
     fetchCategories()
 
@@ -161,9 +195,12 @@ export default function FormSubmitProduct({
     values: ProductFormValues
   ) => {
 
-    console.log("values", values)
+    console.log(
+      'values',
+      values
+    )
 
-    // 🔥 chống spam create
+    // chống spam create
     if (loading) return
 
     try {
@@ -315,8 +352,8 @@ export default function FormSubmitProduct({
                 >
                   <option value="">
                     {loadingCate
-                      ? "Đang tải..."
-                      : "-- Chọn category --"}
+                      ? 'Đang tải...'
+                      : '-- Chọn category --'}
                   </option>
 
                   {categories.map(c => (
@@ -357,22 +394,25 @@ export default function FormSubmitProduct({
                   Description
                 </FieldLabel>
 
-                <InputGroup>
+                <div className="space-y-2">
 
-                  <InputGroupTextarea
-                    {...field}
-                    disabled={loading}
-                    rows={6}
-                    className="min-h-24 resize-none"
+                  <ReactQuill
+                    theme="snow"
+                    value={field.value}
+                    onChange={
+                      field.onChange
+                    }
+                    modules={modules}
+                    readOnly={loading}
+                    className="bg-white"
                   />
 
-                  <InputGroupAddon align="block-end">
-                    <InputGroupText>
-                      {field.value?.length || 0}
-                    </InputGroupText>
-                  </InputGroupAddon>
+                  <div className="text-sm text-muted-foreground text-right">
+                    {field.value?.length ||
+                      0}
+                  </div>
 
-                </InputGroup>
+                </div>
 
                 <FieldDescription>
                   Mô tả sản phẩm
