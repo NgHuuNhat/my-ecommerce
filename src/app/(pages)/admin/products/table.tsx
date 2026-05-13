@@ -370,7 +370,7 @@ function createColumns(router: ReturnType<typeof useRouter>): ColumnDef<z.infer<
       accessorKey: "category_by",
       header: "Category By",
       cell: ({ row }: any) => (
-        <div className="w-32">
+        <div className="w-12">
           <Badge variant="outline" className="px-1.5 text-muted-foreground">
             {row.original.category_by.name || "category_by"}
           </Badge>
