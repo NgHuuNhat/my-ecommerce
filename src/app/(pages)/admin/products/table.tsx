@@ -106,6 +106,7 @@ export const schema = z.object({
   slug: z.string(),
   description: z.string(),
   images: z.array(z.string()).optional(),
+  properties: z.array(z.any()).optional(),
   created_at: z.string(),
   updated_at: z.string(),
 })
@@ -203,12 +204,12 @@ function createColumns(router: ReturnType<typeof useRouter>): ColumnDef<z.infer<
             )}
 
             {/* count */}
-            <Badge
+            {/* <Badge
               variant="outline"
               className="px-1.5 text-muted-foreground"
             >
               {images.length} images
-            </Badge>
+            </Badge> */}
           </div>
         )
       },
@@ -224,28 +225,147 @@ function createColumns(router: ReturnType<typeof useRouter>): ColumnDef<z.infer<
         </div>
       ),
     },
+
+    // {
+    //   accessorKey: "slug",
+    //   header: "Slug",
+    //   cell: ({ row }) => (
+    //     <div className="w-32">
+    //       <Badge variant="outline" className="px-1.5 text-muted-foreground">
+    //         {row.original.slug || "slug"}
+    //       </Badge>
+    //     </div>
+    //   ),
+    // },
+
+
+    // {
+    //   accessorKey: "properties",
+    //   header: "Properties",
+
+    //   cell: ({ row }) => {
+
+    //     const properties =
+    //       row.original.properties || []
+
+    //     if (!properties.length) {
+    //       return (
+    //         <span className="text-muted-foreground">
+    //           Empty
+    //         </span>
+    //       )
+    //     }
+
+    //     return (
+    //       <div className="flex flex-wrap gap-1 max-w-[250px]">
+
+    //         {properties
+    //           .slice(0, 2)
+    //           .map((item, index) => (
+
+    //             <Badge
+    //               key={index}
+    //               variant="outline"
+    //             >
+    //               {item.color} / {item.size}
+    //             </Badge>
+    //           ))}
+
+    //         {properties.length > 2 && (
+    //           <Badge variant="secondary">
+    //             +{properties.length - 2}
+    //           </Badge>
+    //         )}
+    //       </div>
+    //     )
+    //   },
+    // },
+
     {
-      accessorKey: "slug",
-      header: "Slug",
-      cell: ({ row }) => (
-        <div className="w-32">
-          <Badge variant="outline" className="px-1.5 text-muted-foreground">
-            {row.original.slug || "slug"}
-          </Badge>
-        </div>
-      ),
+      accessorKey: "properties",
+      header: "Properties",
+
+      cell: ({ row }) => {
+
+        const properties =
+          row.original.properties || []
+
+        if (!properties.length) {
+          return (
+            <span className="border rounded-full p-2 flex gap-2 px-1.5 text-muted-foreground text-xs">
+              Empty
+            </span>
+          )
+        }
+
+        return (
+          <div className="space-y-2 min-w-[300px]">
+
+            {properties.map(
+              (item, index) => (
+
+                <div
+                  key={index}
+                  className="border rounded-full p-2 flex gap-2 px-1.5 text-muted-foreground text-xs"
+                >
+
+                  <div>
+                    <span className="">
+                      Name:
+                    </span>{' '}
+                    {item.name}
+                  </div>
+
+                  <div>
+                    <span className="">
+                      / Color:
+                    </span>{' '}
+                    {item.color}
+                  </div>
+
+                  <div>
+                    <span className="">
+                      / Size:
+                    </span>{' '}
+                    {item.size}
+                  </div>
+
+                  <div>
+                    <span className="">
+                      / Price:
+                    </span>{' '}
+                    {item.price.toLocaleString(
+                      'vi-VN'
+                    )}đ
+                  </div>
+
+                  <div>
+                    <span className="">
+                      / Stock:
+                    </span>{' '}
+                    {item.stock}
+                  </div>
+
+                </div>
+              )
+            )}
+          </div>
+        )
+      },
     },
-    {
-      accessorKey: "description",
-      header: "Description",
-      cell: ({ row }) => (
-        <div className="w-32">
-          <Badge variant="outline" className="px-1.5 text-muted-foreground">
-            {row.original.description || "description"}
-          </Badge>
-        </div>
-      ),
-    },
+
+    // {
+    //   accessorKey: "description",
+    //   header: "Description",
+    //   cell: ({ row }) => (
+    //     <div className="w-32">
+    //       <Badge variant="outline" className="px-1.5 text-muted-foreground">
+    //         {row.original.description || "description"}
+    //       </Badge>
+    //     </div>
+    //   ),
+    // },
+
     {
       accessorKey: "category_by",
       header: "Category By",
@@ -257,17 +377,17 @@ function createColumns(router: ReturnType<typeof useRouter>): ColumnDef<z.infer<
         </div>
       ),
     },
-    {
-      accessorKey: "created_by",
-      header: "Created By",
-      cell: ({ row }: any) => (
-        <div className="w-32">
-          <Badge variant="outline" className="px-1.5 text-muted-foreground">
-            {row.original.created_by.email || "created_by"}
-          </Badge>
-        </div>
-      ),
-    },
+    // {
+    //   accessorKey: "created_by",
+    //   header: "Created By",
+    //   cell: ({ row }: any) => (
+    //     <div className="w-32">
+    //       <Badge variant="outline" className="px-1.5 text-muted-foreground">
+    //         {row.original.created_by.email || "created_by"}
+    //       </Badge>
+    //     </div>
+    //   ),
+    // },
     {
       accessorKey: "created_at",
       header: "Created At",

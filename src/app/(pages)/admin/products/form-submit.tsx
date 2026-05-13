@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, useFieldArray } from 'react-hook-form'
 
 import {
   useEffect,
@@ -82,6 +82,7 @@ export default function FormSubmitProduct({
 
   const userId = session?.user?.id
 
+  // react hook form
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
 
@@ -101,7 +102,19 @@ export default function FormSubmitProduct({
 
       user_id:
         data?.user_id || '',
+
+      properties: data?.properties || [],
     }
+  })
+
+  // field array for properties
+  const {
+    fields,
+    append,
+    remove
+  } = useFieldArray({
+    control: form.control,
+    name: 'properties'
   })
 
   // toolbar react quill
@@ -196,7 +209,7 @@ export default function FormSubmitProduct({
   ) => {
 
     console.log(
-      'values',
+      'FORM SUBMIT:--------------------------',
       values
     )
 
@@ -213,7 +226,7 @@ export default function FormSubmitProduct({
       }
 
       console.log(
-        'payload',
+        'payload submit',
         payload
       )
 
@@ -229,6 +242,7 @@ export default function FormSubmitProduct({
           images: [],
           category_id: '',
           user_id: userId,
+          properties: [],
         })
       }
 
@@ -428,6 +442,154 @@ export default function FormSubmitProduct({
               </Field>
             )}
           />
+
+          {/* PROPERTIES */}
+          <FieldGroup>
+
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold">
+                Properties
+              </h3>
+
+              <Button
+                type="button"
+                onClick={() =>
+                  append({
+                    name: '',
+                    color: '',
+                    size: '',
+                    price: 0,
+                    stock: 0
+                  })
+                }
+              >
+                Add Property
+              </Button>
+            </div>
+
+            <div className="space-y-4">
+
+              {fields.map((item, index) => (
+
+                <div
+                  key={item.id}
+                  className="border rounded-lg p-4 space-y-4"
+                >
+
+                  {/* name */}
+                  <Controller
+                    name={`properties.${index}.name`}
+                    control={form.control}
+                    render={({ field }) => (
+                      <Field>
+                        <FieldLabel>
+                          Name
+                        </FieldLabel>
+
+                        <Input
+                          {...field}
+                          placeholder="Variant name"
+                        />
+                      </Field>
+                    )}
+                  />
+
+                  {/* color */}
+                  <Controller
+                    name={`properties.${index}.color`}
+                    control={form.control}
+                    render={({ field }) => (
+                      <Field>
+                        <FieldLabel>
+                          Color
+                        </FieldLabel>
+
+                        <Input
+                          {...field}
+                          placeholder="Red"
+                        />
+                      </Field>
+                    )}
+                  />
+
+                  {/* size */}
+                  <Controller
+                    name={`properties.${index}.size`}
+                    control={form.control}
+                    render={({ field }) => (
+                      <Field>
+                        <FieldLabel>
+                          Size
+                        </FieldLabel>
+
+                        <Input
+                          {...field}
+                          placeholder="XL"
+                        />
+                      </Field>
+                    )}
+                  />
+
+                  {/* price */}
+                  <Controller
+                    name={`properties.${index}.price`}
+                    control={form.control}
+                    render={({ field }) => (
+                      <Field>
+                        <FieldLabel>
+                          Price
+                        </FieldLabel>
+
+                        <Input
+                          type="number"
+                          value={field.value}
+                          onChange={(e) =>
+                            field.onChange(
+                              Number(e.target.value)
+                            )
+                          }
+                        />
+                      </Field>
+                    )}
+                  />
+
+                  {/* stock */}
+                  <Controller
+                    name={`properties.${index}.stock`}
+                    control={form.control}
+                    render={({ field }) => (
+                      <Field>
+                        <FieldLabel>
+                          Stock
+                        </FieldLabel>
+
+                        <Input
+                          type="number"
+                          value={field.value}
+                          onChange={(e) =>
+                            field.onChange(
+                              Number(e.target.value)
+                            )
+                          }
+                        />
+                      </Field>
+                    )}
+                  />
+
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    onClick={() =>
+                      remove(index)
+                    }
+                  >
+                    Remove
+                  </Button>
+
+                </div>
+              ))}
+            </div>
+          </FieldGroup>
 
         </FieldGroup>
 

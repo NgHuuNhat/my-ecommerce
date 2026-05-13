@@ -120,6 +120,7 @@ export const getProductById = async (id: string): Promise<ProductType | null> =>
 //   }
 // }
 
+//POST CREATE PRODUCT
 export const createProduct = async (data: ProductType) => {
   try {
     const {

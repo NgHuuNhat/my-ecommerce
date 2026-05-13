@@ -39,4 +39,15 @@ export const productSchema = z.object({
   // default_price: z.number().optional(),
   user_id: z.string().min(1),
   category_id: z.string().min(1, "Category is required"),
+  // properties: z.array(propertySchema).optional(),
+  properties: z.array(
+    z.object({
+      name: z.string(),
+      color: z.string(),
+      size: z.string(),
+      price: z.number(),
+      stock: z.number(),
+    })
+  )
+  // default_price: z.number().optional(),
 })
