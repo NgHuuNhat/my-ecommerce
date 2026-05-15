@@ -104,7 +104,7 @@ export default function HomePage() {
         </div>
 
         {/* CATEGORY */}
-        <section className='container mx-auto px-4'>
+        <section className='container mx-auto px-4 max-w-7xl'>
           <div className='grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-8'>
             {categories.map((item) => (
               <button
@@ -118,7 +118,7 @@ export default function HomePage() {
         </section>
 
         {/* FLASH SALE */}
-        <section className='container mx-auto px-4'>
+        <section className='container mx-auto px-4 max-w-7xl'>
           <div className='rounded-3xl bg-gradient-to-r from-orange-500 to-red-500 p-5'>
             <div className='mb-5 flex items-center justify-between'>
               <div>
@@ -175,7 +175,7 @@ export default function HomePage() {
         </section>
 
         {/* PRODUCTS */}
-        <section className='container mx-auto px-4'>
+        <section className='container mx-auto px-4 max-w-7xl'>
           <div className='mb-5 flex items-center justify-between'>
             <div>
               <h2 className='text-2xl font-bold'>
@@ -231,7 +231,7 @@ export default function HomePage() {
         </section>
 
         {/* BANNER */}
-        <section className='container mx-auto px-4'>
+        <section className='container mx-auto px-4 max-w-7xl'>
           <div className='rounded-3xl bg-black px-6 py-10 text-center text-white'>
             <h2 className='mb-3 text-3xl font-bold'>
               Mega Sale 5.5
