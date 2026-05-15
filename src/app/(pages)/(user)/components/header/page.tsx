@@ -28,7 +28,7 @@ import {
 export default function Header() {
   const { data: session, status } = useSession();
 
-  const user = session?.user;
+  const user = session?.user as any;
 
   const hotKeywords = [
     "Iphone 15",
@@ -129,6 +129,15 @@ export default function Header() {
                   align="end"
                   className="w-56"
                 >
+                  {user?.role === 'admin' && (
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin">
+                        <User size={16} />
+                        Trang quản lý ADMIN
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+
                   <DropdownMenuItem asChild>
                     <Link href="#">
                       <User size={16} />
