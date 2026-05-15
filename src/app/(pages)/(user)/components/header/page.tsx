@@ -32,9 +32,7 @@ export default function Header() {
 
   const hotKeywords = [
     "Iphone 15",
-    "Áo thun nam",
     "Macbook Air",
-    "Bàn phím cơ",
     "Tai nghe gaming",
     "Chuột Logitech",
     "Màn hình 2K",
@@ -43,7 +41,7 @@ export default function Header() {
   return (
     <header className="w-full bg-[#ee4d2d] text-white">
       {/* TOP HEADER */}
-      <div className="border-b border-white/10">
+      <div className="hidden border-b border-white/10 md:block">
         <div className="mx-auto flex h-9 max-w-7xl items-center justify-between px-4 text-[13px]">
           {/* LEFT */}
           <div className="flex items-center gap-4">
@@ -81,7 +79,6 @@ export default function Header() {
               Tiếng Việt
             </button>
 
-            {/* loading session */}
             {status === "loading" ? (
               <div className="h-5 w-20 animate-pulse rounded bg-white/20" />
             ) : !user ? (
@@ -106,7 +103,6 @@ export default function Header() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="flex items-center gap-2 hover:opacity-80">
-                    {/* avatar */}
                     {user.image ? (
                       <img
                         src={user.image}
@@ -119,7 +115,7 @@ export default function Header() {
                       </div>
                     )}
 
-                    <span>
+                    <span className="max-w-[120px] truncate">
                       {user.name || user.email}
                     </span>
                   </button>
@@ -129,7 +125,7 @@ export default function Header() {
                   align="end"
                   className="w-56"
                 >
-                  {user?.role === 'admin' && (
+                  {user?.role === "admin" && (
                     <DropdownMenuItem asChild>
                       <Link href="/admin">
                         <User size={16} />
@@ -173,58 +169,191 @@ export default function Header() {
       </div>
 
       {/* MAIN HEADER */}
-      <div className="mx-auto flex h-[90px] max-w-7xl items-center gap-10 px-4">
-        {/* LOGO */}
-        <Link
-          href="/"
-          className="flex shrink-0 items-center gap-3"
-        >
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-white text-3xl font-bold">
-            S
+      <div className="mx-auto max-w-7xl px-3 py-3 md:px-4">
+        {/* MOBILE TOP */}
+        <div className="mb-3 flex items-center justify-between md:hidden">
+          {/* LOGO */}
+          <Link
+            href="/"
+            className="flex items-center gap-2"
+          >
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl border-2 border-white text-xl font-bold">
+              S
+            </div>
+
+            <h1 className="text-2xl font-light tracking-tight">
+              Shopee
+            </h1>
+          </Link>
+
+          {/* RIGHT */}
+          <div className="flex items-center gap-3">
+            {/* USER */}
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button>
+                    {user.image ? (
+                      <img
+                        src={user.image}
+                        alt={user.name || "User"}
+                        className="h-9 w-9 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20">
+                        <User size={18} />
+                      </div>
+                    )}
+                  </button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent
+                  align="end"
+                  className="w-56"
+                >
+                  {user?.role === "admin" && (
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin">
+                        <User size={16} />
+                        Trang quản lý ADMIN
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+
+                  <DropdownMenuItem asChild>
+                    <Link href="#">
+                      <User size={16} />
+                      Tài khoản của tôi
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem asChild>
+                    <Link href="#">
+                      <Package size={16} />
+                      Đơn mua
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem
+                    onClick={() =>
+                      signOut({
+                        callbackUrl: "/",
+                      })
+                    }
+                    className="text-red-500 focus:text-red-500"
+                  >
+                    <LogOut size={16} />
+                    Đăng xuất
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link href="/login">
+                <Button
+                  size="sm"
+                  variant="secondary"
+                >
+                  Đăng nhập
+                </Button>
+              </Link>
+            )}
+
+            {/* CART */}
+            <button className="relative">
+              <ShoppingCart
+                size={28}
+                className="transition hover:scale-105"
+              />
+
+              <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-[11px] font-semibold text-[#ee4d2d]">
+                2
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* DESKTOP */}
+        <div className="hidden items-center gap-10 md:flex">
+          {/* LOGO */}
+          <Link
+            href="/"
+            className="flex shrink-0 items-center gap-3"
+          >
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-white text-3xl font-bold">
+              S
+            </div>
+
+            <h1 className="text-3xl font-light tracking-tight">
+              Shopee
+            </h1>
+          </Link>
+
+          {/* SEARCH */}
+          <div className="flex flex-1 flex-col">
+            <div className="flex rounded-sm bg-white p-1 shadow-lg">
+              <Input
+                placeholder="Shopee bao ship 0Đ - Đăng ngay!"
+                className="h-12 border-0 text-black shadow-none focus-visible:ring-0"
+              />
+
+              <Button className="h-12 rounded-sm bg-[#fb5533] px-7 hover:bg-[#f63d19]">
+                <Search size={20} />
+              </Button>
+            </div>
+
+            {/* HOT KEYWORDS */}
+            <div className="mt-2 flex items-center gap-4 overflow-hidden text-xs text-white/90">
+              {hotKeywords.map((item) => (
+                <button
+                  key={item}
+                  className="hover:text-white"
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <h1 className="text-3xl font-light tracking-tight">
-            Shopee
-          </h1>
-        </Link>
-
-        {/* SEARCH */}
-        <div className="flex flex-1 flex-col">
-          <div className="flex rounded-sm bg-white p-1 shadow-lg">
-            <Input
-              placeholder="Shopee bao ship 0Đ - Đăng ngay!"
-              className="h-12 border-0 text-black shadow-none focus-visible:ring-0"
+          {/* CART */}
+          <button className="relative shrink-0">
+            <ShoppingCart
+              size={34}
+              className="transition hover:scale-105"
             />
 
-            <Button className="h-12 rounded-sm bg-[#fb5533] px-7 hover:bg-[#f63d19]">
-              <Search size={20} />
+            <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-[11px] font-semibold text-[#ee4d2d]">
+              2
+            </span>
+          </button>
+        </div>
+
+        {/* MOBILE SEARCH */}
+        <div className="md:hidden">
+          <div className="flex rounded-xl bg-white p-1 shadow-lg">
+            <Input
+              placeholder="Tìm sản phẩm..."
+              className="h-11 border-0 text-black shadow-none focus-visible:ring-0"
+            />
+
+            <Button className="h-11 rounded-lg bg-[#fb5533] px-4 hover:bg-[#f63d19]">
+              <Search size={18} />
             </Button>
           </div>
 
           {/* HOT KEYWORDS */}
-          <div className="mt-2 flex items-center gap-4 overflow-hidden text-xs text-white/90">
+          <div className="mt-2 flex gap-3 overflow-x-auto whitespace-nowrap text-xs text-white/90 scrollbar-hide">
             {hotKeywords.map((item) => (
               <button
                 key={item}
-                className="hover:text-white"
+                className="rounded-full bg-white/10 px-3 py-1"
               >
                 {item}
               </button>
             ))}
           </div>
         </div>
-
-        {/* CART */}
-        <button className="relative shrink-0">
-          <ShoppingCart
-            size={34}
-            className="transition hover:scale-105"
-          />
-
-          <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-[11px] font-semibold text-[#ee4d2d]">
-            2
-          </span>
-        </button>
       </div>
     </header>
   );
