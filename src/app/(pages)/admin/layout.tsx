@@ -39,7 +39,7 @@ export default function AdminLayout({ children }: any) {
                 ),
             },
             {
-                name: "products management (dang code)",
+                name: "products management",
                 url: "/admin/products",
                 icon: (
                     <DatabaseIcon
