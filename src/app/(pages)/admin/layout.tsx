@@ -7,7 +7,7 @@ export default function AdminLayout({ children }: any) {
     const data: any = {
         documents: [
             {
-                name: "home page",
+                name: "go to home page",
                 url: "/",
                 icon: (
                     <HomeIcon
@@ -15,10 +15,10 @@ export default function AdminLayout({ children }: any) {
                 ),
             },
             {
-                name: "admin page",
+                name: " go to admin page",
                 url: "/admin",
                 icon: (
-                    <DatabaseIcon
+                    <HomeIcon
                     />
                 ),
             },
